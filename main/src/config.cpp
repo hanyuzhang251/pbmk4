@@ -18,8 +18,8 @@ pros::MotorGroup left_drive({left_front_5_5w, left_mid_11w, left_back_11w, left_
 pros::MotorGroup right_drive({right_front_5_5w, right_mid_11w, right_back_11w, right_front_11w});
 
 // drivetrain settings
-lemlib::Drivetrain drivetrain(&left_motor_group, //
-                              &right_motor_group, //
+lemlib::Drivetrain drivetrain(&left_drive, //
+                              &right_drive, //
                               10, // 
                               lemlib::Omniwheel::NEW_4, // 
                               343, // 

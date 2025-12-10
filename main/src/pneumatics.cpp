@@ -14,12 +14,10 @@
 // Define pneumatic solenoids using PROS 4 ADI API
 // Each solenoid is controlled via a digital output on an ADI port
 static pros::adi::DigitalOut matchloader_solenoid(MATCHLOADER_SOLENOID_PORT);
-static pros::adi::DigitalOut pto_solenoid_a(PTO_SOLENOID_A_PORT);
-static pros::adi::DigitalOut pto_solenoid_b(PTO_SOLENOID_B_PORT);
+static pros::adi::DigitalOut pto_solenoid(PTO_SOLENOID_PORT);
 static pros::adi::DigitalOut score_middle_solenoid(SCORE_MIDDLE_SOLENOID_PORT);
 static pros::adi::DigitalOut score_high_solenoid(SCORE_HIGH_SOLENOID_PORT);
-static pros::adi::DigitalOut park_solenoid_a(PARK_SOLENOID_A_PORT);
-static pros::adi::DigitalOut park_solenoid_b(PARK_SOLENOID_B_PORT);
+static pros::adi::DigitalOut park_solenoid(PARK_SOLENOID_PORT);
 
 // Global pneumatic actuator instances for convenient assignment syntax
 // These allow syntax like: score_high_piston = true;
@@ -60,20 +58,16 @@ void pneumatics_set_state(const PneumaticsState& state) {
 	
 	// PTO solenoids control (dual solenoid)
 	if (current_state.pto) {
-		pto_solenoid_a.set_value(true);
-		pto_solenoid_b.set_value(true);
+		pto_solenoid.set_value(true);
 	} else {
-		pto_solenoid_a.set_value(false);
-		pto_solenoid_b.set_value(false);
+		pto_solenoid.set_value(false);
 	}
 	
 	// Park solenoids control (dual solenoid)
 	if (current_state.park) {
-		park_solenoid_a.set_value(true);
-		park_solenoid_b.set_value(true);
+		park_solenoid.set_value(true);
 	} else {
-		park_solenoid_a.set_value(false);
-		park_solenoid_b.set_value(false);
+		park_solenoid.set_value(false);
 	}
 	
 	// Score middle goal solenoid
@@ -107,22 +101,18 @@ void pneumatics_set_matchloader(bool enable) {
 void pneumatics_set_pto(bool enable) {
 	current_state.pto = enable;
 	if (enable) {
-		pto_solenoid_a.set_value(true);
-		pto_solenoid_b.set_value(true);
+		pto_solenoid.set_value(true);
 	} else {
-		pto_solenoid_a.set_value(false);
-		pto_solenoid_b.set_value(false);
+		pto_solenoid.set_value(false);
 	}
 }
 
 void pneumatics_set_park(bool enable) {
 	current_state.park = enable;
 	if (enable) {
-		park_solenoid_a.set_value(true);;
-		park_solenoid_b.set_value(true);;
+		park_solenoid.set_value(true);;
 	} else {
-		park_solenoid_a.set_value(false);;
-		park_solenoid_b.set_value(false);;
+		park_solenoid.set_value(false);;
 	}
 }
 

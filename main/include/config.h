@@ -40,7 +40,7 @@
 // ============================================================================
 
 // IMU sensor (for gyro heading)
-#define IMU_PORT 15
+#define IMU_PORT 16
 
 // ============================================================================
 // PNEUMATIC ACTUATORS (ADI Ports)
@@ -48,10 +48,10 @@
 
 // Pneumatics for goal mechanisms
 #define MATCHLOADER_SOLENOID_PORT 'A'    // Matchloader piston
-#define PTO_SOLENOID_A_PORT 'B'          // PTO piston A
+#define PTO_SOLENOID_PORT 'B'          // PTO piston A
 #define SCORE_MIDDLE_SOLENOID_PORT 'C'   // Middle goal piston
 #define SCORE_HIGH_SOLENOID_PORT 'D'     // Long goal piston
-#define PARK_SOLENOID_A_PORT 'E'         // Park piston A
+#define PARK_SOLENOID_PORT 'E'         // Park piston A
 #define DESCORE_SOLENOID_PORT 'F'        // Descore piston
 
 // ============================================================================
@@ -68,7 +68,7 @@
 // Track width (distance between left and right wheels in inches)
 #define DRIVETRAIN_TRACK_WIDTH 9.8
 
-0.5714
+// 0.5714
 
 
 // ============================================================================

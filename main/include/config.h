@@ -11,31 +11,34 @@
 #define CONFIG_H
 
 #include "api.h"
+#include "lib/data/data.h"
+
+constexpr uint32_t PROCESS_DELAY = 10;
 
 // ============================================================================
 // DRIVETRAIN CONFIGURATION
 // ============================================================================
 
 // One 5.5W motor per side (geared for speed)
-#define LEFT_FRONT_5_5W_PORT 15
-#define RIGHT_FRONT_5_5W_PORT 17
+#define LEFT_FRONT_5_5W_PORT (-15)
 
 // Left side drivetrain motors (11W - higher torque)
-#define LEFT_BACK_11W_PORT 14
-#define LEFT_MID_11W_PORT 13
-#define LEFT_FRONT_11W_PORT 12
+#define LEFT_BACK_11W_PORT (-14)
+#define LEFT_MID_11W_PORT (13)
+#define LEFT_FRONT_11W_PORT (-12)
 
+#define RIGHT_FRONT_5_5W_PORT (17)
 // Right side drivetrain motors (11W - higher torque)
-#define RIGHT_BACK_11W_PORT 18
-#define RIGHT_MID_11W_PORT 19
-#define RIGHT_FRONT_11W_PORT 20
+#define RIGHT_BACK_11W_PORT (18)
+#define RIGHT_MID_11W_PORT (-19)
+#define RIGHT_FRONT_11W_PORT (20)
 
 // ============================================================================
 // INTAKE SYSTEM
 // ============================================================================
 
 // Intake motor (11W)
-#define INTAKE_MOTOR_PORT 11
+#define INTAKE_MOTOR_PORT (-2)
 
 // ============================================================================
 // SENSOR CONFIGURATION
@@ -50,11 +53,11 @@
 
 // Pneumatics for goal mechanisms
 #define MATCHLOADER_SOLENOID_PORT 'A'    // Matchloader piston
-#define PTO_SOLENOID_PORT 'B'          // PTO piston A
-#define SCORE_MIDDLE_SOLENOID_PORT 'C'   // Middle goal piston
-#define SCORE_HIGH_SOLENOID_PORT 'D'     // Long goal piston
-#define PARK_SOLENOID_PORT 'E'         // Park piston A
-#define DESCORE_SOLENOID_PORT 'F'        // Descore piston
+#define PTO_SOLENOID_PORT 'C'          // PTO piston A
+#define INDEXER_SOLENOID_PORT 'F'   // Middle goal piston
+#define PARK_SOLENOID_PORT 'D'         // Park piston A
+#define WING_SOLENOID_PORT 'B'
+#define DESCORE_SOLENOID_PORT 'G'        // Descore piston
 
 // ============================================================================
 // MOTOR CONFIGURATION CONSTANTS
@@ -78,10 +81,59 @@
 // ============================================================================
 
 // Distance sensor calibration (raw values)
-#define FRONT_LEFT_OFFSET 0
-#define FRONT_RIGHT_OFFSET 0
+#define FRONT_DIST_PORT 1
+#define LEFT_DIST_PORT 3
+#define RIGHT_DIST_PORT 10
 
 // Maximum distance sensor readings (in mm)
 #define MAX_DISTANCE_READING 2000
+
+// ============================================================================
+// CONTROLS
+// ============================================================================
+
+inline constexpr pros::controller_digital_e_t INTAKE_BUTTON = pros::E_CONTROLLER_DIGITAL_L1;
+inline constexpr pros::controller_digital_e_t SCORE_HIGH_BUTTON = pros::E_CONTROLLER_DIGITAL_R1;
+inline constexpr pros::controller_digital_e_t SCORE_MID_BUTTON = pros::E_CONTROLLER_DIGITAL_L2;
+inline constexpr pros::controller_digital_e_t SCORE_LOW_BUTTON = pros::E_CONTROLLER_DIGITAL_R2;
+
+inline constexpr pros::controller_digital_e_t DESCORE_BUTTON = pros::E_CONTROLLER_DIGITAL_Y;
+inline constexpr pros::controller_digital_e_t MATCHLOAD_BUTTON = pros::E_CONTROLLER_DIGITAL_DOWN;
+inline constexpr pros::controller_digital_e_t WING_BUTTONS[] = {
+    pros::E_CONTROLLER_DIGITAL_LEFT,
+    pros::E_CONTROLLER_DIGITAL_UP,
+    pros::E_CONTROLLER_DIGITAL_RIGHT,
+};
+
+// ============================================================================
+// DEVICES
+// ============================================================================
+
+inline pros::Controller master = pros::Controller(pros::E_CONTROLLER_MASTER);
+
+extern pros::adi::DigitalOut matchloader_piston;
+extern pros::adi::DigitalOut pto_piston;
+extern pros::adi::DigitalOut score_mid_piston;
+extern pros::adi::DigitalOut park_piston;
+extern pros::adi::DigitalOut wing_piston;
+extern pros::adi::DigitalOut descore_piston;
+
+extern pros::Distance front_dist;
+extern pros::Distance left_dist;
+extern pros::Distance right_dist;
+
+extern Point front_dist_offset;
+extern Point left_dist_offset;
+extern Point right_dist_offset;
+
+extern lemlib::Drivetrain drivetrain;
+extern pros::IMU imu;
+extern lemlib::OdomSensors sensors;
+extern lemlib::ControllerSettings lateral_controller;
+extern lemlib::ControllerSettings angular_controller;
+extern lemlib::ExpoDriveCurve throttle_curve;
+extern lemlib::ExpoDriveCurve steer_curve;
+extern lemlib::Chassis chassis;
+
 
 #endif // CONFIG_H

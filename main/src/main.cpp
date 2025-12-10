@@ -1,21 +1,8 @@
 #include "main.h"
 #include "config.h"
+#include "distance-reset.h"
 
-/**
- * A callback function for LLEMU's center button.
- *
- * When this callback is fired, it will toggle line 2 of the LCD text between
- * "I was pressed!" and nothing.
- */
-void on_center_button() {
-	static bool pressed = false;
-	pressed = !pressed;
-	if (pressed) {
-		pros::lcd::set_text(2, "I was pressed!");
-	} else {
-		pros::lcd::clear_line(2);
-	}
-}
+int quadrant = 1;
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -25,12 +12,12 @@ void on_center_button() {
  */
 void initialize() {
     pros::lcd::initialize(); // initialize brain screen
-    chassis.calibrate(); // calibrate sensors
-	
-    // Initialize subsystems
-	intake_init();
-	pneumatics_init();
 
+
+    chassis.calibrate(); // calibrate sensors
+
+    // Initialize subsystems
+    intake_init();
 
     pros::Task screen_task([&]() {
         while (true) {
@@ -39,7 +26,7 @@ void initialize() {
             pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
             pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
             // delay to save resources
-            pros::delay(20);
+            pros::delay(50);
         }
     });
 }
@@ -49,7 +36,8 @@ void initialize() {
  * the VEX Competition Switch, following either autonomous or opcontrol. When
  * the robot is enabled, this task will exit.
  */
-void disabled() {}
+void disabled() {
+}
 
 /**
  * Runs after initialize(), and before autonomous when connected to the Field
@@ -60,7 +48,8 @@ void disabled() {}
  * This task will exit when the robot is enabled and autonomous or opcontrol
  * starts.
  */
-void competition_initialize() {}
+void competition_initialize() {
+}
 
 /**
  * Runs the user autonomous code. This function will be started in its own task
@@ -74,7 +63,6 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-	
 }
 
 /**
@@ -91,5 +79,38 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	
+    while (true) {
+        if (master.get_digital(INTAKE_BUTTON)) intake_set_state(INTAKE);
+        else if (master.get_digital(SCORE_HIGH_BUTTON)) intake_set_state(SCORE_HIGH);
+        else if (master.get_digital(SCORE_MID_BUTTON)) intake_set_state(SCORE_MID);
+        else if (master.get_digital(SCORE_LOW_BUTTON)) intake_set_state(SCORE_LOW);
+        else intake_set_state(IDLE);
+
+        if (master.get_digital_new_press(MATCHLOAD_BUTTON)) set_matchloader(!matchloader_value);
+        if (master.get_digital_new_press(DESCORE_BUTTON)) set_descore(!descore_value);
+
+        for (const pros::controller_digital_e_t button : WING_BUTTONS) {
+            if (master.get_digital_new_press(button)) {
+                set_wing(!wing_value);
+                break;
+            }
+        }
+
+        if (master.get_digital_new_press(DIGITAL_B)) {
+            quadrant++;
+            if (quadrant == 5) quadrant = 1;
+            pros::lcd::print(4, "QUAD: %d   ", quadrant); // x
+
+        }
+        if (master.get_digital_new_press(DIGITAL_A)) {
+            match_load_reset(300, 0, quadrant);
+        }
+
+        const int drive = master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+        const int turn = master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
+
+        chassis.arcade(drive, turn);
+
+        pros::delay(PROCESS_DELAY);
+    }
 }

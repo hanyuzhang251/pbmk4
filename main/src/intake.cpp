@@ -1,6 +1,5 @@
 #include "main.h"
 #include "intake.h"
-#include "pneumatics.h"
 
 /**
  * \file intake.cpp
@@ -12,6 +11,13 @@ pros::Motor intake_motor(INTAKE_MOTOR_PORT, pros::v5::MotorGears::blue, pros::v5
 
 // Current intake state
 static IntakeState current_state = IDLE;
+
+bool matchloader_value = false;
+bool pto_value = false;
+bool score_mid_value = false;
+bool park_value = false;
+bool wing_value = false;
+bool descore_value = false;
 
 void intake_init() {
 	// Initialize intake motor
@@ -29,34 +35,67 @@ void intake_stop() {
 	intake_motor.move_velocity(0);
 }
 
+void set_matchloader(const bool value) {
+	matchloader_value = value;
+	(void)matchloader_piston.set_value(matchloader_value);
+}
+void set_pto(bool value) {
+    pto_value = value;
+    (void)pto_piston.set_value(pto_value);
+}
+
+void set_score_mid(bool value) {
+    score_mid_value = value;
+    (void)score_mid_piston.set_value(score_mid_value);
+}
+
+void set_park(bool value) {
+    park_value = value;
+    (void)park_piston.set_value(park_value);
+}
+
+void set_wing(bool value) {
+    wing_value = value;
+    (void)wing_piston.set_value(wing_value);
+}
+
+void set_descore(bool value) {
+    descore_value = value;
+    (void)descore_piston.set_value(descore_value);
+}
+
+void set_score_mid(bool value);
+void set_park(bool value);
+void set_wing(bool value);
+void set_descore(bool value);
+
 void intake_set_state(IntakeState state) {
 	current_state = state;
 	
 	// Handle state-specific behavior
 	switch (state) {
 		case INTAKE:
-			score_high_piston = false;
-			score_mid_piston = false;
+			set_score_mid(false);
 			intake_spin(600);
+		set_pto(false);
 			break;
 		case SCORE_MID:
-			score_high_piston = false;
-			score_mid_piston = true;
-			intake_spin(100);
+		set_score_mid(true);
+			intake_spin(600);
+		set_pto(true);
 			break;
 		case SCORE_LOW:
-			score_high_piston = false;
-			score_mid_piston = false;
-			intake_spin(-50);
+		set_score_mid(false);
+			intake_spin(-200);
+		set_pto(true);
 			break;
 		case SCORE_HIGH:
-			score_high_piston = true;
-			score_mid_piston = false;
+		set_score_mid(false);
+		set_pto(true);
 			intake_spin(600);
 			break;
 		case IDLE:
-			score_high_piston = false;
-			score_mid_piston = false;
+
 			intake_stop();
 			break;
 	}

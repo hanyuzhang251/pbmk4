@@ -106,8 +106,8 @@ function_start:
 }
 
 inline void single_sensor_reset(const uint32_t sample_time, const double heading_mod = 0, const Dir dist_sensor = Dir::Front, const Dir wall = Dir::Front) {
-    pros::Distance sensor = (dist_sensor == Dir::Front ? front_dist2_sensor : dist_sensor == Dir::Left ? left_dist_sensor : right_dist_sensor);
-    const Point distance_offset = dist_sensor == Dir::Front ? front_dist2_sensor_offset : dist_sensor == Dir::Left ? left_dist_sensor_offset : right_dist_sensor_offset;
+    pros::Distance sensor = (dist_sensor == Dir::Front ? front_dist : dist_sensor == Dir::Left ? left_dist : right_dist);
+    const Point distance_offset = dist_sensor == Dir::Front ? front_dist_offset : dist_sensor == Dir::Left ? left_dist_offset : right_dist_offset;
     double theta = std::fmod(chassis.getPose().theta + 90 - heading_mod + 360, 360);
     theta = std::fmod(theta + 180, 180);
     theta = std::fmod(theta + 90, 90);
@@ -149,8 +149,8 @@ inline void match_load_reset(const uint32_t sample_time, const double heading_mo
 
     // Pick the side distance sensor based on the wall we are next to. Distance
     // sensors don't have enough range to detect the other wall.
-    pros::Distance& side_dist_sensor = dir == Dir::Right ? right_dist_sensor : left_dist_sensor;
-    const Point& side_dist_sensor_offset = dir == Dir::Right ? right_dist_sensor_offset : left_dist_sensor_offset;
+    pros::Distance& side_dist_sensor = dir == Dir::Right ? right_dist : left_dist;
+    const Point& side_dist_sensor_offset = dir == Dir::Right ? right_dist_offset : left_dist_offset;
 
     // The general thought process is that the robot's position, the point the
     // distance sensor is hitting, and the point on the wall which forms a line
@@ -168,7 +168,7 @@ inline void match_load_reset(const uint32_t sample_time, const double heading_mo
     double front_wall_dist = -1;
     std::atomic<bool> ready(false);
     pros::Task([&] {
-        front_wall_dist = find_dist(front_dist2_sensor, front_dist2_sensor_offset, rad, Dir::Front, sample_time);
+        front_wall_dist = find_dist(front_dist, front_dist_offset, rad, Dir::Front, sample_time);
         ready.store(true);
     });
     const double side_wall_dist = find_dist(side_dist_sensor, side_dist_sensor_offset, rad, dir, sample_time);

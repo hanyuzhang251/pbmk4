@@ -1,5 +1,5 @@
-#ifndef _PNEUMATICS_H_
-#define _PNEUMATICS_H_
+#ifndef PNEUMATICS_H
+#define PNEUMATICS_H
 
 /**
  * \file pneumatics.h
@@ -32,7 +32,7 @@ public:
 	 * @brief Constructor
 	 * @param setter Function pointer to the pneumatics setter function
 	 */
-	PneumaticActuator(void (*setter)(bool)) : setter_func(setter), state(false) {}
+	explicit PneumaticActuator(void (*setter)(bool)) : setter_func(setter), state(false) {}
 	
 	/**
 	 * @brief Assignment operator to set actuator state
@@ -70,4 +70,4 @@ extern PneumaticActuator park_piston;
 extern PneumaticActuator score_mid_piston;
 extern PneumaticActuator score_high_piston;
 
-#endif // _PNEUMATICS_H_
+#endif // PNEUMATICS_H

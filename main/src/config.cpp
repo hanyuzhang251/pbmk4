@@ -29,6 +29,7 @@ pros::adi::DigitalOut score_mid_piston(INDEXER_SOLENOID_PORT);
 pros::adi::DigitalOut park_piston(PARK_SOLENOID_PORT);
 pros::adi::DigitalOut wing_piston(WING_SOLENOID_PORT);
 pros::adi::DigitalOut descore_piston(DESCORE_SOLENOID_PORT);
+pros::adi::DigitalOut clamp_piston(CLAMP_SOLENOID_PORT);
 
 pros::Distance front_dist(FRONT_DIST_PORT);
 pros::Distance left_dist(LEFT_DIST_PORT);

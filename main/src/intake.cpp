@@ -18,6 +18,7 @@ bool score_mid_value = false;
 bool park_value = false;
 bool wing_value = false;
 bool descore_value = false;
+bool clamp_value = false;
 
 void intake_init() {
 	// Initialize intake motor
@@ -64,10 +65,18 @@ void set_descore(bool value) {
     (void)descore_piston.set_value(descore_value);
 }
 
+void set_clamp(bool value) {
+	clamp_value = value;
+	(void)clamp_piston.set_value(clamp_value);
+}
+
 void set_score_mid(bool value);
 void set_park(bool value);
 void set_wing(bool value);
 void set_descore(bool value);
+
+bool wing_macro_clamp = false;
+uint32_t intake_run_time = 0;
 
 void intake_set_state(IntakeState state) {
 	current_state = state;

@@ -2,8 +2,6 @@
 #include "config.h"
 #include "distance-reset.h"
 
-int quadrant = 1;
-
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
@@ -12,7 +10,6 @@ int quadrant = 1;
  */
 void initialize() {
     pros::lcd::initialize(); // initialize brain screen
-
 
     chassis.calibrate(); // calibrate sensors
 
@@ -25,6 +22,7 @@ void initialize() {
             pros::lcd::print(0, "X: %f", chassis.getPose().x); // x
             pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
             pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
+            pros::lcd::print(5, "IR: %d  ç", intake_run_time); // heading
             // delay to save resources
             pros::delay(50);
         }
@@ -80,30 +78,64 @@ void autonomous() {
  */
 void opcontrol() {
     while (true) {
-        if (master.get_digital(INTAKE_BUTTON)) intake_set_state(INTAKE);
-        else if (master.get_digital(SCORE_HIGH_BUTTON)) intake_set_state(SCORE_HIGH);
-        else if (master.get_digital(SCORE_MID_BUTTON)) intake_set_state(SCORE_MID);
-        else if (master.get_digital(SCORE_LOW_BUTTON)) intake_set_state(SCORE_LOW);
-        else intake_set_state(IDLE);
+        bool raise_wing = true;
+        for (const pros::controller_digital_e_t button : WING_ON_BUTTON_COMBINATION) {
+            if (!master.get_digital(button)) {
+                raise_wing = false;
+                break;
+            }
+        }
+        bool lower_wing = true;
+        for (const pros::controller_digital_e_t button : WING_OFF_BUTTON_COMBINATION) {
+            if (!master.get_digital(button)) {
+                lower_wing = false;
+                break;
+            }
+        }
+
+        if (raise_wing) set_wing(true);
+        if (lower_wing) set_wing(false);
+
+        if (raise_wing || lower_wing) {
+            intake_run_time = 0;
+        }
+
+        IntakeState intake_state = IntakeState::IDLE;
+
+        if (master.get_digital(INTAKE_BUTTON)) intake_state = (INTAKE);
+        else if (master.get_digital(SCORE_HIGH_BUTTON)) intake_state = (SCORE_HIGH);
+        else if (master.get_digital(SCORE_MID_BUTTON)) intake_state = (SCORE_MID);
+        else if (master.get_digital(SCORE_LOW_BUTTON)) intake_state = (SCORE_LOW);
+        else {
+            intake_run_time = 0;
+        }
+
+        intake_run_time += PROCESS_DELAY;
+
+        if (intake_run_time >= INTAKE_RUN_DELAY) {
+            intake_set_state(intake_state);
+        } else {
+            intake_set_state(IntakeState::IDLE);
+        }
 
         if (master.get_digital_new_press(MATCHLOAD_BUTTON)) set_matchloader(!matchloader_value);
         if (master.get_digital_new_press(DESCORE_BUTTON)) set_descore(!descore_value);
+        if (master.get_digital_new_press(PARK_BUTTON)) {
+            set_park(!park_value);
+            if (park_value == true) {
+                set_clamp(false);
+                intake_set_state(IDLE);
+                pros::delay(300);
+                set_clamp(true);
+            }
+        }
+        if (master.get_digital_new_press(CLAMP_BUTTON)) set_clamp(!clamp_value);
 
         for (const pros::controller_digital_e_t button : WING_BUTTONS) {
             if (master.get_digital_new_press(button)) {
                 set_wing(!wing_value);
                 break;
             }
-        }
-
-        if (master.get_digital_new_press(DIGITAL_B)) {
-            quadrant++;
-            if (quadrant == 5) quadrant = 1;
-            pros::lcd::print(4, "QUAD: %d   ", quadrant); // x
-
-        }
-        if (master.get_digital_new_press(DIGITAL_A)) {
-            match_load_reset(300, 0, quadrant);
         }
 
         const int drive = master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);

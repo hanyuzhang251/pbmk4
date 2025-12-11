@@ -53,10 +53,11 @@ constexpr uint32_t PROCESS_DELAY = 10;
 
 // Pneumatics for goal mechanisms
 #define MATCHLOADER_SOLENOID_PORT 'A'    // Matchloader piston
-#define PTO_SOLENOID_PORT 'C'          // PTO piston A
-#define INDEXER_SOLENOID_PORT 'F'   // Middle goal piston
-#define PARK_SOLENOID_PORT 'D'         // Park piston A
 #define WING_SOLENOID_PORT 'B'
+#define PTO_SOLENOID_PORT 'C'          // PTO piston A
+#define PARK_SOLENOID_PORT 'D'         // Park piston A
+#define CLAMP_SOLENOID_PORT 'E'        // Descore piston
+#define INDEXER_SOLENOID_PORT 'F'   // Middle goal piston
 #define DESCORE_SOLENOID_PORT 'G'        // Descore piston
 
 // ============================================================================
@@ -97,6 +98,9 @@ inline constexpr pros::controller_digital_e_t SCORE_HIGH_BUTTON = pros::E_CONTRO
 inline constexpr pros::controller_digital_e_t SCORE_MID_BUTTON = pros::E_CONTROLLER_DIGITAL_L2;
 inline constexpr pros::controller_digital_e_t SCORE_LOW_BUTTON = pros::E_CONTROLLER_DIGITAL_R2;
 
+inline constexpr pros::controller_digital_e_t PARK_BUTTON = pros::E_CONTROLLER_DIGITAL_A;
+inline constexpr pros::controller_digital_e_t CLAMP_BUTTON = pros::E_CONTROLLER_DIGITAL_B;
+
 inline constexpr pros::controller_digital_e_t DESCORE_BUTTON = pros::E_CONTROLLER_DIGITAL_Y;
 inline constexpr pros::controller_digital_e_t MATCHLOAD_BUTTON = pros::E_CONTROLLER_DIGITAL_DOWN;
 inline constexpr pros::controller_digital_e_t WING_BUTTONS[] = {
@@ -104,6 +108,17 @@ inline constexpr pros::controller_digital_e_t WING_BUTTONS[] = {
     pros::E_CONTROLLER_DIGITAL_UP,
     pros::E_CONTROLLER_DIGITAL_RIGHT,
 };
+
+inline constexpr pros::controller_digital_e_t WING_ON_BUTTON_COMBINATION[] = {
+    pros::E_CONTROLLER_DIGITAL_L1,
+    pros::E_CONTROLLER_DIGITAL_R1,
+};
+
+inline constexpr pros::controller_digital_e_t WING_OFF_BUTTON_COMBINATION[] = {
+    pros::E_CONTROLLER_DIGITAL_L2,
+    pros::E_CONTROLLER_DIGITAL_R2,
+};
+
 
 // ============================================================================
 // DEVICES
@@ -117,6 +132,7 @@ extern pros::adi::DigitalOut score_mid_piston;
 extern pros::adi::DigitalOut park_piston;
 extern pros::adi::DigitalOut wing_piston;
 extern pros::adi::DigitalOut descore_piston;
+extern pros::adi::DigitalOut clamp_piston;
 
 extern pros::Distance front_dist;
 extern pros::Distance left_dist;

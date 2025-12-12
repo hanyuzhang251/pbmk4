@@ -20,13 +20,13 @@ inline void skills() {
     pros::delay(400);
     chassis.arcade(-10,0);
     pros::delay(800);
-    chassis.turnToHeading(-2,300,{.minSpeed=40});
+    chassis.turnToHeading(2,300,{.minSpeed=40}); // HEADING FLIPPED
     chassis.waitUntilDone();
     pros::delay(400);
     chassis.arcade(45,0);
     pros::delay(600);
     chassis.arcade(0,0);
-    chassis.turnToHeading(-1,300,{.minSpeed=40});
+    chassis.turnToHeading(1,300,{.minSpeed=40});  // HEADING FLIPPED
     chassis.waitUntilDone();
     pros::delay(800);
     chassis.arcade(60,0);
@@ -35,7 +35,7 @@ inline void skills() {
     pros::delay(250);
     chassis.arcade(0,0);
     pros::delay(200);
-    chassis.turnToHeading(1,100,{.minSpeed=40});
+    chassis.turnToHeading(-1,100,{.minSpeed=40});  // HEADING FLIPPED
     chassis.waitUntilDone();
     pros::delay(500);
     chassis.arcade(45,0);
@@ -58,11 +58,11 @@ inline void skills() {
     intake_set_state(INTAKE);
     chassis.arcade(-100,0);
     pros::delay(100);
-    chassis.turnToPoint(-25.3,-15.4,430);
+    chassis.turnToPoint(-25.3,15.4,430);  // FLIPPED
     chassis.waitUntilDone();
     intake_set_state(INTAKE);
-    chassis.moveToPoint(-25.3, -15.4, 1200, {.minSpeed=60});
-    chassis.turnToHeading(98,400);
+    chassis.moveToPoint(-25.3, 15.4, 1200, {.minSpeed=60}); // FLIPPED
+    chassis.turnToHeading(-98,400);  // FLIPPED
     chassis.waitUntilDone();
     pros::delay(80);
     intake_set_state(IDLE);
@@ -73,13 +73,13 @@ inline void skills() {
     chassis.arcade(-50,0);
     pros::delay(500);
     intake_set_state(INTAKE);
-    chassis.turnToHeading(45,400);
+    chassis.turnToHeading(-45,400); // FLIPPED
     chassis.moveToPoint(-13.5, -13.5, 400, {.minSpeed=60});
-    chassis.turnToHeading(45,200,{.minSpeed=80});
+    chassis.turnToHeading(-45,200,{.minSpeed=80}); // FLIPPED
     chassis.waitUntilDone();
     chassis.arcade(50,0);
     pros::delay(300);
-    chassis.turnToHeading(45,200,{.minSpeed=80});
+    chassis.turnToHeading(-45,200,{.minSpeed=80});  // FLIPPED
     chassis.waitUntilDone();
     chassis.arcade(50,0);
     pros::delay(200);
@@ -88,8 +88,8 @@ inline void skills() {
     chassis.arcade(-14,0);
     pros::delay(200);
     intake_set_state(SCORE_MID);
-    chassis.moveToPoint(-21, -30, 600, {.forwards=false, .minSpeed=100});
-    chassis.moveToPoint(-28, -42, 500, {.forwards=false, .minSpeed=100});
+    chassis.moveToPoint(-21, 30, 600, {.forwards=false, .minSpeed=100}); // FLIPPED
+    chassis.moveToPoint(-28, 42, 500, {.forwards=false, .minSpeed=100}); // FLIPPED
     chassis.turnToHeading(-90, 600);
     chassis.waitUntilDone();
     // intake_raise_value = false;
@@ -103,9 +103,9 @@ inline void skills() {
   intake_set_state(INTAKE);
     set_matchloader(true);
     chassis.setPose(0,0,-90);
-    match_load_reset(150,0,3);
+    match_load_reset(150,0,2); // FLIPPED
     pros::delay(100);
-    chassis.moveToPoint(-87, -48, 1000, {.forwards=true, .maxSpeed=55, .minSpeed=45},true);
+    chassis.moveToPoint(-87, 48, 1000, {.forwards=true, .maxSpeed=55, .minSpeed=45},true); // FLIPPED
     chassis.waitUntilDone();
     chassis.arcade(40, 0);
     pros::delay(300);
@@ -113,7 +113,7 @@ inline void skills() {
     pros::delay(110);
     chassis.arcade(38, 0);
     pros::delay(500);
-    match_load_reset(500, 0, 3);
+    match_load_reset(500, 0, 2); // FLIPPED
     //intake_raise_value=true;
     pros::delay(180);
 //    intake_raise_value=false;
@@ -122,16 +122,16 @@ inline void skills() {
     chassis.arcade(-70,0);
     pros::delay(200);
     set_wing(true);
-    chassis.turnToHeading(-80,200);
+    chassis.turnToHeading(-100,200); // FLIPPED (-80 -> -100)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //go to goal and score
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    chassis.moveToPoint(-40, -63, 500, {.forwards=false, .maxSpeed=90, .minSpeed=40});
-    chassis.moveToPoint(0, -65, 600, {.forwards=false, .maxSpeed=120, .minSpeed=70});
+    chassis.moveToPoint(-40, 63, 500, {.forwards=false, .maxSpeed=90, .minSpeed=40}); // FLIPPED
+    chassis.moveToPoint(0, 65, 600, {.forwards=false, .maxSpeed=120, .minSpeed=70}); // FLIPPED
     chassis.waitUntilDone();
     intake_set_state(IDLE);
     set_matchloader(false);
-    chassis.moveToPoint(18, -62.5, 900, {.forwards=false, .maxSpeed=120, .minSpeed=100});
+    chassis.moveToPoint(18, 62.5, 900, {.forwards=false, .maxSpeed=120, .minSpeed=100}); // FLIPPED
     chassis.turnToHeading(180,500,{.minSpeed=60});
     chassis.waitUntilDone();
     chassis.arcade(127,0);
@@ -139,10 +139,10 @@ inline void skills() {
     drive_until_distance(180,119, 70, 430, 1, false, 600);
     chassis.turnToHeading(90,400);
     chassis.waitUntilDone();
-    match_load_reset(150, 0, 4);
-    chassis.moveToPose(24, -48, 90, 300, {.forwards=false,.lead=0.6, .minSpeed=70});
-    chassis.turnToPoint(21,-48,50, {.forwards=false, .minSpeed=70});
-    chassis.moveToPose(21, -48, 90, 250, {.forwards=false, .lead=0.3, .minSpeed=80});
+    match_load_reset(150, 0, 1); // FLIPPED
+    chassis.moveToPose(24, 48, 90, 300, {.forwards=false,.lead=0.6, .minSpeed=70}); // FLIPPED
+    chassis.turnToPoint(21,48,50, {.forwards=false, .minSpeed=70}); // FLIPPED
+    chassis.moveToPose(21, 48, 90, 250, {.forwards=false, .lead=0.3, .minSpeed=80}); // FLIPPED
     chassis.waitUntilDone();
     chassis.arcade(-100,0);
     intake_set_state(SCORE_HIGH);
@@ -151,7 +151,7 @@ inline void skills() {
     chassis.waitUntilDone();
     chassis.arcade(-60,0);
     pros::delay(200);
-    match_load_reset(500, 0, 4);
+    match_load_reset(500, 0, 1); // FLIPPED
     chassis.arcade(0,0);
     pros::delay(400);
         chassis.setPose(22,chassis.getPose().y,90);
@@ -161,7 +161,7 @@ inline void skills() {
     pros::delay(300);
     chassis.cancelAllMotions();
     intake_set_state(INTAKE);
-    chassis.moveToPose(70, -47, 90, 1400, {.forwards=true, .maxSpeed=58,.minSpeed=50},true);
+    chassis.moveToPose(70, 47, 90, 1400, {.forwards=true, .maxSpeed=58,.minSpeed=50},true); // FLIPPED
     chassis.waitUntilDone();
     chassis.arcade(40, 0);
     pros::delay(300);
@@ -169,7 +169,7 @@ inline void skills() {
     pros::delay(120);
     chassis.arcade(50, 0);
     pros::delay(300);
-    match_load_reset(700, 0, 4);
+    match_load_reset(700, 0, 1); // FLIPPED
     //intake_raise_value=true;
     pros::delay(180);
 //    intake_raise_value=false;
@@ -180,17 +180,17 @@ inline void skills() {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //score 2nd cycle on first goal
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    chassis.turnToPoint(20,-46.2,50, {.forwards=false, .minSpeed=70});
-    chassis.moveToPose(20,-46.2,90,650, {.forwards=false, .lead=0.3,.maxSpeed=110, .minSpeed=50,});
+    chassis.turnToPoint(20,46.2,50, {.forwards=false, .minSpeed=70}); // FLIPPED
+    chassis.moveToPose(20,46.2,90,650, {.forwards=false, .lead=0.3,.maxSpeed=110, .minSpeed=50,}); // FLIPPED
     chassis.waitUntilDone();
     intake_set_state(SCORE_HIGH);
     chassis.arcade(-100,0);
     pros::delay(350);
     set_matchloader(false);
-    match_load_reset(80, 0, 4);
-    chassis.arcade(-100,50);
+    match_load_reset(80, 0, 1); // FLIPPED
+    chassis.arcade(-100,-50); // FLIPPED (turn value)
     pros::delay(300);
-    chassis.arcade(-100,-50);
+    chassis.arcade(-100,50); // FLIPPED (turn value)
     pros::delay(300);
     chassis.turnToHeading(90,300, {.minSpeed=60});
     chassis.waitUntilDone();
@@ -213,14 +213,14 @@ inline void skills() {
     chassis.arcade(-40,0);
     pros::delay(700);
 
-   chassis.setPose(0,0,90);
-    chassis.setPose(26,-48.5,chassis.getPose().theta);
+   chassis.setPose(0,0,90); // what is this for
+    chassis.setPose(26,48.5,chassis.getPose().theta); // FLIPPED
     chassis.arcade(60,0);
     pros::delay(350);
-    chassis.turnToHeading(2,400);
+    chassis.turnToHeading(-2,400);  // FLIPPED
     intake_set_state(SCORE_MID);
     chassis.moveToPoint(31, 0, 500, {.forwards=true, .maxSpeed=120, .minSpeed=110});
-    chassis.moveToPose(32, 20,2, 300, {.forwards=true, .maxSpeed=120, .minSpeed=110});
+    chassis.moveToPose(32, -20,-2, 300, {.forwards=true, .maxSpeed=120, .minSpeed=110}); // FLIPPED both y and heading
     chassis.waitUntilDone();
     drive_until_distance(0,119, 70, 450, 5, false, 1000);
     chassis.waitUntilDone();
@@ -229,11 +229,11 @@ inline void skills() {
  intake_set_state(INTAKE);
     set_matchloader(true);
 
-    match_load_reset(150,0,1);
+    match_load_reset(150,0,4); // FLIPPED
     pros::delay(100);
     chassis.cancelAllMotions();
 
-    chassis.moveToPoint(104, 47, 1000, {.forwards=true, .maxSpeed=45, .minSpeed=40},true);
+    chassis.moveToPoint(104, -47, 1000, {.forwards=true, .maxSpeed=45, .minSpeed=40},true); // FLIPPED
     chassis.waitUntilDone();
     chassis.arcade(40, 0);
     pros::delay(300);
@@ -241,24 +241,24 @@ inline void skills() {
     pros::delay(120);
     chassis.arcade(50, 0);
     pros::delay(300);
-    match_load_reset(700, 0, 1);
+    match_load_reset(700, 0, 4); // FLIPPED
     //intake_raise_value=true;
     pros::delay(180);
 //    intake_raise_value=false;
     pros::delay(200);
     chassis.arcade(-70,0);
     pros::delay(200);
-    chassis.turnToHeading(100,200);
+    chassis.turnToHeading(80,200);  // FLIPPED 100->80
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //go to goal and score
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    chassis.moveToPoint(37, 59, 500, {.forwards=false, .maxSpeed=120, .minSpeed=50});
-    chassis.turnToPoint(0,63,50,{.forwards=false, .minSpeed=80});
-    chassis.moveToPoint(0, 63, 600, {.forwards=false, .maxSpeed=120, .minSpeed=100});
+    chassis.moveToPoint(37, -59, 500, {.forwards=false, .maxSpeed=120, .minSpeed=50}); // FLIPPED
+    chassis.turnToPoint(0,-63,50,{.forwards=false, .minSpeed=80}); // FLIPPED
+    chassis.moveToPoint(0, -63, 600, {.forwards=false, .maxSpeed=120, .minSpeed=100}); // FLIPPED
     chassis.waitUntilDone();
     intake_set_state(IDLE);
     set_matchloader(false);
-    chassis.moveToPoint(-23, 64.5, 800, {.forwards=false, .maxSpeed=120, .minSpeed=110});
+    chassis.moveToPoint(-23, -64.5, 800, {.forwards=false, .maxSpeed=120, .minSpeed=110}); // FLIPPED
     chassis.turnToHeading(0,500,{.minSpeed=60});
     chassis.waitUntilDone();
     chassis.arcade(127,0);
@@ -267,9 +267,9 @@ inline void skills() {
     chassis.turnToHeading(-90,400);
     chassis.waitUntilDone();
     match_load_reset(150, 0, 2);
-    chassis.moveToPose(-24, 48, -90, 500, {.forwards=false,.lead=0.6, .minSpeed=70});
-    chassis.turnToPoint(-21,48,50, {.forwards=false, .minSpeed=70});
-    chassis.moveToPose(-21, 48, -90, 200, {.forwards=false, .lead=0.3, .minSpeed=80});
+    chassis.moveToPose(-24, -48, -90, 500, {.forwards=false,.lead=0.6, .minSpeed=70}); // FLIPPED
+    chassis.turnToPoint(-21,-48,50, {.forwards=false, .minSpeed=70}); // FLIPPED
+    chassis.moveToPose(-21, -48, -90, 200, {.forwards=false, .lead=0.3, .minSpeed=80}); // FLIPPED
     chassis.waitUntilDone();
     intake_set_state(SCORE_HIGH);
     chassis.arcade(-100,0);
@@ -286,7 +286,7 @@ inline void skills() {
     pros::delay(300);
     intake_set_state(INTAKE);
     chassis.cancelMotion();
-    chassis.moveToPose(-75, 47.5, -90, 1700, {.forwards=true, .maxSpeed=45,.minSpeed=38},true);
+    chassis.moveToPose(-75, -47.5, -90, 1700, {.forwards=true, .maxSpeed=45,.minSpeed=38},true); // FLIPPED
     chassis.waitUntilDone();
     intake_set_state(INTAKE);
     chassis.arcade(40, 0);
@@ -295,7 +295,7 @@ inline void skills() {
     pros::delay(120);
     chassis.arcade(50, 0);
     pros::delay(300);
-    match_load_reset(700, 0, 2);
+    match_load_reset(700, 0, 3); // FLIPPED
     // //intake_raise_value=true;
     pros::delay(180);
     // intake_raise_value=false;
@@ -305,13 +305,13 @@ inline void skills() {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //score 4th cycle on second goal
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    chassis.moveToPose(-18,48,-90,600, {.forwards=false, .maxSpeed=110, .minSpeed=80,}, false);
+    chassis.moveToPose(-18,-48,-90,600, {.forwards=false, .maxSpeed=110, .minSpeed=80,}, false); // FLIPPED
     chassis.waitUntilDone();
     intake_set_state(SCORE_HIGH);
     chassis.arcade(-100,0);
     pros::delay(350);
     set_matchloader(false);
-    match_load_reset(80, 0, 2);
+    match_load_reset(80, 0, 3); // FLIPPED
     chassis.arcade(-100,0);
     pros::delay(600);
     chassis.turnToHeading(-90,100, {.minSpeed=60});
@@ -322,15 +322,15 @@ inline void skills() {
     chassis.waitUntilDone();
     chassis.arcade(-60,0);
     pros::delay(300);
-    match_load_reset(80,0,2);
+    match_load_reset(80,0,3); // FLIPPED
     pros::delay(100);
     chassis.setPose(0,0,0);
     chassis.turnToHeading(-90,400,{.minSpeed=70});
     chassis.waitUntilDone();
     chassis.setPose(0,0,(chassis.getPose().theta)+90);
     intake_set_state(INTAKE);
-    chassis.moveToPoint(10, 25, 500, {.forwards=true, .maxSpeed=120, .minSpeed=90});
-    chassis.moveToPoint(12, 33, 1050, {.forwards=true, .maxSpeed=120, .minSpeed=90});
+    chassis.moveToPoint(10, -25, 500, {.forwards=true, .maxSpeed=120, .minSpeed=90}); // FLIPPED
+    chassis.moveToPoint(12, -33, 1050, {.forwards=true, .maxSpeed=120, .minSpeed=90}); // FLIPPED
     chassis.turnToHeading(90,270);
     chassis.waitUntilDone();
    intake_set_state(INTAKE);

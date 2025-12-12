@@ -29,7 +29,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="443233f4-bb5a-44f7-a126-27a73f05f47c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/include/autons.h" beforeDir="false" afterPath="$PROJECT_DIR$/main/include/autons.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -104,7 +103,7 @@
       <updated>1765338151023</updated>
       <workItem from="1765338152130" duration="10602000" />
       <workItem from="1765408108211" duration="4180000" />
-      <workItem from="1765488120058" duration="9397000" />
+      <workItem from="1765488120058" duration="9910000" />
     </task>
     <servers />
   </component>

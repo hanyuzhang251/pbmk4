@@ -1,6 +1,8 @@
 #include "main.h"
 #include "intake.h"
 
+#include <ranges>
+
 #include "distance-reset.h"
 
 /**
@@ -111,31 +113,73 @@ void intake_set_state(IntakeState state) {
 			break;
 	}
 }
+	float power_mult = 1;
 
-void hold_dist_and_reset(uint32_t sample_time, double heading_mod, int quadrant, int distance) {
-	const uint32_t end = pros::millis() + sample_time;
+void hold_dist_and_reset(uint32_t sample_time, double heading_mod, int quadrant, int distance, int tolerance) {
+const uint32_t start = pros::millis();
+	const uint32_t end = start + sample_time;
 
-	pros::Task([sample_time, heading_mod, quadrant]() {
-		match_load_reset(sample_time, heading_mod, quadrant);
-	});
+	intake_set_state(INTAKE);
 
-	constexpr int minout = 10;
-	constexpr int maxout = 60;
+	bool dsr_started = false;
 
+
+
+	int minout = 1;
+	constexpr int maxout = 80;
+
+	int32_t prev_diff = 0;
+	constexpr int move_tolerance = 12;
+	uint32_t time_since_move = 0;
+	constexpr uint32_t time_since_move_tolerance = 200;
+	constexpr  uint32_t DELAY = 20;
+
+	constexpr float PM_INCREMENT = 3;
+	power_mult = 1;
 	while (pros::millis() < end) {
 
-		const int32_t measure = front_dist.get_distance();
+		const int32_t diff =front_dist.get_distance() - distance;
+
+		printf("diff %d, pdiff %d, tsm %d, pm %f\n", diff, prev_diff, time_since_move, power_mult);
+
+		if (lemlib::sgn(prev_diff) != lemlib::sgn(diff)) {
+			power_mult = 1;
+		}
+		if (std::abs(diff - prev_diff) < move_tolerance && std::abs(diff) > tolerance * 25.4) {
+			time_since_move += DELAY;
+		} else {
+
+
+			time_since_move = 0;
+
+			prev_diff = diff;
+			if (power_mult > 1 ) power_mult -= PM_INCREMENT;
+			else power_mult = 1;
+
+		}
+			if (time_since_move > time_since_move_tolerance) {
+				power_mult += PM_INCREMENT;
+			}
+
 
 		// mm to inches and times 5 for scaling
-		int power = (measure - distance) / 25.4 * 5;
+		int power = (std::pow(std::abs(diff) / 25.4, 5) + power_mult) * lemlib::sgn(diff);
 
-		if (std::abs(power) < minout) power = lemlib::sgn(power) * minout;
-		if (std::abs(power) > maxout) power = lemlib::sgn(power) * maxout;
+		if (std::abs(power) < minout) power = lemlib::sgn(diff) * minout;
+		if (std::abs(power) > maxout) power = lemlib::sgn(diff) * maxout;
+
+		if (!dsr_started && std::abs(diff) <= tolerance || pros::millis() + 20 >= end) {
+			dsr_started = true;
+			pros::Task([end, heading_mod, quadrant]() {
+			match_load_reset(end - pros::millis(), heading_mod, quadrant);
+
+			});
+		}
 
 		chassis.arcade(power, 0);
 
 
-		pros::delay(PROCESS_DELAY);
+		pros::delay(DELAY);
 	}
 }
 
@@ -197,6 +241,29 @@ void drive_until_distance(float heading_hold, const int power, const uint32_t ra
             break;
         }
     }
+}
+
+void score_7_mid() {
+	chassis.cancelAllMotions();
+	intake_set_state(SCORE_MID);
+
+	chassis.arcade(30, 0);
+	pros::delay(350);
+	chassis.arcade(0, 0);
+	chassis.setBrakeMode(MOTOR_BRAKE_BRAKE);
+
+	pros::delay(2000);
+
+	chassis.setBrakeMode(MOTOR_BRAKE_COAST);
+
+	intake_set_state(IDLE);
+
+	chassis.arcade(-30, 0);
+	pros::delay(450);
+
+	chassis.arcade(50, 0);
+	pros::delay(200);
+
 }
 
 

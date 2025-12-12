@@ -22,9 +22,9 @@ void initialize() {
             pros::lcd::print(0, "X: %f", chassis.getPose().x); // x
             pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
             pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
-            pros::lcd::print(5, "IR: %d  ç", intake_run_time); // heading
+            master.print(0, 0, "fd:%d   pm:%f  ", front_dist.get_distance(), power_mult);
             // delay to save resources
-            pros::delay(50);
+            pros::delay(51);
         }
     });
 }
@@ -79,6 +79,12 @@ void autonomous() {
  */
 void opcontrol() {
     while (true) {
+
+        if (master.get_digital_new_press(DIGITAL_X)) {
+            // hold_dist_and_reset(3000, 0, 2, 195, 0.1);
+            score_7_mid();
+        }
+
         bool raise_wing = true;
         for (const pros::controller_digital_e_t button : WING_ON_BUTTON_COMBINATION) {
             if (!master.get_digital(button)) {

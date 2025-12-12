@@ -44,10 +44,14 @@ void set_wing(bool value);
 void set_descore(bool value);
 void set_clamp(bool value);
 
-void hold_dist_and_reset(uint32_t sample_time, double heading_mod, int quadrant, int distance = 300);
+	extern float power_mult;
+
+void hold_dist_and_reset(uint32_t sample_time, double heading_mod, int quadrant, int distance = 300, int tolerance = 1);
 
 void drive_until_distance(float heading_hold, int power, uint32_t ramp, int dist, int tolerance, bool greater, uint32_t timeout);
 
 IntakeState intake_get_state();
+
+void score_7_mid();
 
 #endif // _INTAKE_H_

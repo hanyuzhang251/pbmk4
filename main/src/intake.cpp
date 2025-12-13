@@ -99,6 +99,13 @@ void set_clamp(bool value) {
     (void)clamp_piston.set_value(clamp_value);
 }
 
+int custom_vel = 0;
+
+void set_custom_mid(int vel) {
+    custom_vel = vel;
+    intake_set_state(CUSTOM_MID);
+}
+
 void update_intake() {
     double intake_vel = 0;
 
@@ -144,6 +151,12 @@ void update_intake() {
         set_pto(true);
         intake_vel = (270);
         break;
+    }
+    case CUSTOM_MID: {
+        set_score_mid(true);
+        set_pto(true);
+        intake_vel = (custom_vel);
+
     }
     }
 

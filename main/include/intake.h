@@ -20,7 +20,12 @@ enum IntakeState {
 	SCORE_MID_SKILLS_FAST = 6,
 	SCORE_MID_SKILLS_SLOW = 5,
 	SCORE_MID_SKILLS_MEDIUM = 7,
+	CUSTOM_MID = 8,
 };
+
+extern int custom_vel;
+
+void set_custom_mid(int vel);
 
 
 struct JamState {

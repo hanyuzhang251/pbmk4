@@ -61,7 +61,7 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-    awp_12();
+    RIGHT张教练7();
 }
 
 /**

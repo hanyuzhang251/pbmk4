@@ -331,24 +331,24 @@ void score_7_mid() {
     set_matchloader(true);
     pros::delay(200);
 
-    intake_set_state(SCORE_LOW);
+    set_custom_mid(-600);
     pros::delay(200);
 
     intake_set_state(IDLE);
-    pros::delay(200);
+    pros::delay(100);
 
     chassis.arcade(0, 0);
     chassis.setBrakeMode(MOTOR_BRAKE_BRAKE);
 
-    intake_set_state(SCORE_MID_SKILLS_FAST);
-    pros::delay(1100);
+    set_custom_mid(300);
+    pros::delay(1300);
     intake_set_state(IDLE);
     pros::delay(300);
 
-    chassis.arcade(80, 0);
-    pros::delay(250);
+    chassis.arcade(70, 0);
+    pros::delay(350);
     set_descore(true);
-    chassis.arcade(-65, 0);
+    chassis.arcade(-70, 0);
     pros::delay(600);
 
     chassis.arcade(80, 0);
@@ -361,20 +361,18 @@ void score_7_mid() {
     intake_set_state(SCORE_MID_SKILLS_FAST);
     pros::delay(300);
     intake_set_state(SCORE_MID_SKILLS_SLOW);
-    pros::delay(2000);
+    pros::delay(2200);
 
     chassis.setBrakeMode(MOTOR_BRAKE_COAST);
 
     intake_set_state(IDLE);
 
-    chassis.arcade(60, 0);
+    chassis.arcade(20, 0);
     pros::delay(100);
     chassis.arcade(-40, 0);
-    set_score_mid(false);
     pros::delay(200);
     set_score_mid(true);
-
-    pros::delay(150);
+    pros::delay(500);
     chassis.arcade(30, 0);
     pros::delay(250);
 

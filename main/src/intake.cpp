@@ -127,7 +127,26 @@ void update_intake() {
 
         intake_stop();
         break;
+    case SCORE_MID_SKILLS_MEDIUM: {
+        set_score_mid(true);
+        set_pto(true);
+        intake_vel = (250);
+        break;
     }
+    case SCORE_MID_SKILLS_FAST: {
+        set_score_mid(true);
+        set_pto(true);
+        intake_vel = (420);
+        break;
+    }
+    case SCORE_MID_SKILLS_SLOW: {
+        set_score_mid(true);
+        set_pto(true);
+        intake_vel = (270);
+        break;
+    }
+    }
+
 
     intake_jam_state.update();
 
@@ -190,8 +209,6 @@ void hold_dist_and_reset(uint32_t sample_time, double heading_mod, int quadrant,
     power_mult = 1;
     while (pros::millis() < end) {
         const int32_t diff = front_dist.get_distance() - distance;
-
-        printf("diff %d, pdiff %d, tsm %d, pm %f\n", diff, prev_diff, time_since_move, power_mult);
 
         if (lemlib::sgn(prev_diff) != lemlib::sgn(diff)) {
             power_mult = 1;
@@ -294,24 +311,60 @@ void drive_until_distance(float heading_hold, const int power, const uint32_t ra
 
 void score_7_mid() {
     chassis.cancelAllMotions();
-    intake_set_state(SCORE_MID);
+
+
 
     chassis.arcade(30, 0);
-    pros::delay(350);
+    set_matchloader(true);
+    pros::delay(200);
+
+    intake_set_state(SCORE_LOW);
+    pros::delay(200);
+
+    intake_set_state(IDLE);
+    pros::delay(200);
+
     chassis.arcade(0, 0);
     chassis.setBrakeMode(MOTOR_BRAKE_BRAKE);
 
+    intake_set_state(SCORE_MID_SKILLS_FAST);
+    pros::delay(900);
+    intake_set_state(IDLE);
+    pros::delay(300);
+
+    chassis.arcade(80, 0);
+    pros::delay(250);
+    set_descore(true);
+    chassis.arcade(-65, 0);
+    pros::delay(600);
+
+    chassis.arcade(80, 0);
+    pros::delay(300);
+    set_descore(false);
+    chassis.arcade(-60, 0);
+    pros::delay(350);
+    chassis.arcade(0, 0);
+
+    intake_set_state(SCORE_MID_SKILLS_FAST);
+    pros::delay(300);
+    intake_set_state(SCORE_MID_SKILLS_SLOW);
     pros::delay(2000);
 
     chassis.setBrakeMode(MOTOR_BRAKE_COAST);
 
     intake_set_state(IDLE);
 
-    chassis.arcade(-30, 0);
-    pros::delay(450);
-
-    chassis.arcade(50, 0);
+    chassis.arcade(60, 0);
+    pros::delay(100);
+    chassis.arcade(-40, 0);
+    set_score_mid(false);
     pros::delay(200);
+    set_score_mid(true);
+
+    pros::delay(150);
+    chassis.arcade(30, 0);
+    pros::delay(250);
+
 }
 
 

@@ -341,7 +341,7 @@ void score_7_mid() {
     chassis.setBrakeMode(MOTOR_BRAKE_BRAKE);
 
     intake_set_state(SCORE_MID_SKILLS_FAST);
-    pros::delay(900);
+    pros::delay(1100);
     intake_set_state(IDLE);
     pros::delay(300);
 

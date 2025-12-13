@@ -19,6 +19,23 @@ enum IntakeState {
 	IDLE = 4
 };
 
+
+struct JamState {
+	pros::Motor* target;
+
+	const uint32_t jam_tolerance;
+	const uint32_t unjam_duration;
+
+	uint32_t jam_start = 0;
+	uint32_t unjam_end = 0;
+
+	JamState(pros::Motor* target, uint32_t jam_tolerance, uint32_t unjam_duration);
+
+	void update();
+};
+
+extern JamState intake_jam_state;
+
 void intake_init();
 void intake_spin(double velocity);
 void intake_stop();
@@ -44,8 +61,16 @@ void set_wing(bool value);
 void set_descore(bool value);
 void set_clamp(bool value);
 
+	extern float power_mult;
+
+void hold_dist_and_reset(uint32_t sample_time, double heading_mod, int quadrant, int distance = 300, int tolerance = 1);
+
+void drive_until_distance(float heading_hold, int power, uint32_t ramp, int dist, int tolerance, bool greater, uint32_t timeout);
+
 void score_7_mid();
 
 IntakeState intake_get_state();
+
+void score_7_mid();
 
 #endif // _INTAKE_H_

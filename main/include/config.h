@@ -23,8 +23,8 @@ constexpr uint32_t PROCESS_DELAY = 10;
 #define LEFT_FRONT_5_5W_PORT (-15)
 
 // Left side drivetrain motors (11W - higher torque)
-#define LEFT_BACK_11W_PORT (-14)
-#define LEFT_MID_11W_PORT (13)
+#define LEFT_BACK_11W_PORT (-13)
+#define LEFT_MID_11W_PORT (14)
 #define LEFT_FRONT_11W_PORT (-12)
 
 #define RIGHT_FRONT_5_5W_PORT (17)
@@ -52,13 +52,13 @@ constexpr uint32_t PROCESS_DELAY = 10;
 // ============================================================================
 
 // Pneumatics for goal mechanisms
-#define MATCHLOADER_SOLENOID_PORT 'A'    // Matchloader piston
-#define WING_SOLENOID_PORT 'B'
+#define MATCHLOADER_SOLENOID_PORT 'B'    // Matchloader piston
+#define WING_SOLENOID_PORT 'A'
 #define PTO_SOLENOID_PORT 'C'          // PTO piston A
 #define PARK_SOLENOID_PORT 'D'         // Park piston A
 #define CLAMP_SOLENOID_PORT 'E'        // Descore piston
-#define INDEXER_SOLENOID_PORT 'F'   // Middle goal piston
-#define DESCORE_SOLENOID_PORT 'G'        // Descore piston
+#define INDEXER_SOLENOID_PORT 'G'   // Middle goal piston
+#define DESCORE_SOLENOID_PORT 'F'        // Descore piston
 
 // ============================================================================
 // MOTOR CONFIGURATION CONSTANTS

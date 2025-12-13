@@ -44,6 +44,8 @@ void set_wing(bool value);
 void set_descore(bool value);
 void set_clamp(bool value);
 
+void score_7_mid();
+
 IntakeState intake_get_state();
 
 #endif // _INTAKE_H_

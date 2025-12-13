@@ -76,6 +76,18 @@ void set_wing(bool value);
 void set_descore(bool value);
 
 bool wing_macro_clamp = false;
+
+void score_7_mid() {
+	chassis.arcade(0, 0);
+	set_score_mid(false);
+	intake_spin(400);
+	set_pto(true);
+	pros::delay(1750);
+	intake_spin(200);
+	pros::delay(500);
+	intake_spin(0);
+}
+
 uint32_t intake_run_time = 0;
 
 void intake_set_state(IntakeState state) {

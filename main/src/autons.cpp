@@ -14,7 +14,8 @@ constexpr uint32_t MATCHLOAD_DURATION = 2000;
 
 constexpr float LONG_GOAL_ENTER_SPEED_MIN = 110;
 constexpr float LONG_GOAL_ENTER_SPEED_MAX = 70;
-constexpr uint32_t LONG_GOAL_DURATION = 1000;
+constexpr uint32_t LONG_GOAL_DURATION = 1200;
+constexpr uint32_t LONG_GOAL_RAM_DURATION = 350;
 
 constexpr float LONG_GOAL_CROSS_MIN_SPEED = 80;
 constexpr int LONG_GOAL_DIST_ALIGN = 435;
@@ -72,11 +73,15 @@ void long_goals(const bool first)
     // move to long goal
     drive_until_distance(0, 119, 450, 1, 0, 850);
     chassis.turnToHeading(aj(90, -90), 600, {}, false);
-    chassis.moveToPoint(pn* 26, pn* (47 +1), 600, {.forwards = false, .maxSpeed = LONG_GOAL_ENTER_SPEED_MAX, }, false);
+    // move straight backward, actually more consistent here
+    chassis.arcade(-LONG_GOAL_ENTER_SPEED_MAX, 0);
+    pros::delay(300);
     // scoring
     intake_set_state(SCORE_HIGH);
     chassis.arcade(-LONG_GOAL_ENTER_SPEED_MIN, 0);
-    pros::delay(LONG_GOAL_DURATION);
+    pros::delay(LONG_GOAL_RAM_DURATION);
+    chassis.arcade(0, 0);
+    pros::delay(LONG_GOAL_DURATION - LONG_GOAL_RAM_DURATION);
 
     // reset pose at long goal
     match_load_reset(MATCHLOAD_DURATION, 0, aj(1, 3));
@@ -92,11 +97,14 @@ void long_goals(const bool first)
     match_load_reset(MATCHLOAD_DURATION, 0, aj(1, 3));
 
     // move to long goal
-    chassis.moveToPoint(pn* 26, pn* (47 +1), 1000, {.forwards = false, .maxSpeed = LONG_GOAL_ENTER_SPEED_MAX,}, false);
+    chassis.moveToPoint(pn* 26, pn* (47 +1.5), 1000, {.forwards = false, .maxSpeed = LONG_GOAL_ENTER_SPEED_MAX,}, false);
     // scoring
     intake_set_state(SCORE_HIGH);
     chassis.arcade(-LONG_GOAL_ENTER_SPEED_MIN, 0);
-    pros::delay(LONG_GOAL_DURATION);
+    pros::delay(LONG_GOAL_RAM_DURATION);
+    chassis.arcade(0, 0);
+    pros::delay(LONG_GOAL_DURATION - LONG_GOAL_RAM_DURATION);
+
 
     // reset pose at long goal
     chassis.setPose(c_pose().x, c_pose().y, conditional_heading_reset(chr_params));
@@ -111,20 +119,15 @@ void park_cross(const bool first)
 #define aj(a, b) (first?a:b)
     // position to park zone
     intake_set_state(aj(IDLE, INTAKE));
-    chassis.moveToPose(pn* 63.5, pn* 20, aj(170, -10), 1500, {.horizontalDrift = 8, .minSpeed = 60, .earlyExitRange = 2}, false);
+    chassis.moveToPose(pn* 63, pn* 16, aj(170, -10), 1500, {.horizontalDrift = 8, .minSpeed = 60, .earlyExitRange = 2}, false);
     chassis.turnToHeading(aj(170, -10), 300, {}, false);
-    chassis.arcade(60, 0);
-    pros::delay(600);
 
     // enter park zone
     intake_set_state(INTAKE);
-    // sharp to initially enter
-    chassis.arcade(90, 0);
-    pros::delay(350);
-    // slow cross
-    chassis.arcade(70, 0);
-    const uint32_t cross_time = aj(3100,2000);
-    constexpr uint32_t drop_time = 900;
+    // cross
+    chassis.arcade(80, 0);
+    const uint32_t cross_time = aj(3000,2000);
+    constexpr uint32_t drop_time = 2300;
     pros::delay(drop_time);
     if (first) set_matchloader(true);
     pros::delay(cross_time - drop_time);
@@ -134,7 +137,7 @@ void park_cross(const bool first)
     // correct heading
     chassis.turnToHeading(180, 600, {}, false);
     // back up
-    chassis.arcade(-60, 0);
+    chassis.arcade(-70, 0);
     pros::delay(800);
     chassis.arcade(0, 0);
 }
@@ -152,17 +155,17 @@ void skills()
 
     // collect 4 stack
     intake_set_state(INTAKE);
-    chassis.moveToPoint(-23.5 +4 , 23.5 +4, 1000, {}, false);
+    chassis.moveToPoint(-23.5 +6.5 , 23.5 +6.5, 1000, {}, false);
 
     // position to mid goal
     chassis.swingToHeading(-45, DriveSide::RIGHT, 600, {}, false);
-    chassis.moveToPoint(-14 +0, 14 +0, 1000, {.forwards = false}, true);
+    chassis.moveToPoint(-14 +1, 14 +1, 1000, {.forwards = false}, true);
     // begin scoring early
     pros::delay(500);
     intake_set_state(SCORE_MID);
     chassis.waitUntilDone();
     // finish scoring
-    pros::delay(800);
+    pros::delay(300);
 
     // reset pose at mid goal
     chassis.setPose(-14, 14, chassis.getPose().theta);
@@ -173,6 +176,11 @@ void skills()
 
     // 3. mid goal
 
+    chassis.setPose(0, 0, 90);
+    match_load_reset(MATCHLOAD_DURATION, 0, 1);
+
+    set_matchloader(false);
+
     park_cross(true);
 
     // reset pose
@@ -182,21 +190,31 @@ void skills()
     set_matchloader(false);
 
     // collect one from four stack
-    chassis.turnToPoint(25.25, -22, 800, {}, false);
-    chassis.moveToPoint(25.25 -3, -22 -1, 1000, {}, false);
+    chassis.turnToPoint(20.5 +5, -20.5 -6, 800, {}, false);
+    chassis.moveToPoint(20.5 +5, -20.5 -6, 1000, {}, false);
 
     // move to mid goal
     chassis.turnToHeading(135, 600, {}, false);
-    chassis.moveToPoint(14, -14, 800, {.forwards = false, .minSpeed = 32, .earlyExitRange = 2}, false);
-    chassis.arcade(-32, 0);
-    pros::delay(600);
+    chassis.moveToPoint(14, -14, 800, {.forwards = false, .maxSpeed = 40, .earlyExitRange = 2}, false);
+    chassis.arcade(-20, 0);
 
     // score
-    intake_set_state(SCORE_MID);
-    pros::delay(3500);
+    intake_set_state(SCORE_MID_SKILLS);
+    pros::delay(700);
+    // move forward slightly
+    chassis.arcade(20, 0);
+    pros::delay(400);
+    chassis.arcade(0, 0);
+    pros::delay(1500);
+    // ram
+    chassis.arcade(-20, 0);
+    pros::delay(400);
+
+    intake_set_state(IDLE);
 
     // reset pose at mid goal
     chassis.setPose(14, -14, chassis.getPose().theta);
+
 
     // 4. long goal 2
 

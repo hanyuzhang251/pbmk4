@@ -26,6 +26,16 @@ void initialize() {
             pros::delay(51);
         }
     });
+
+    update_intake();
+    pros::Task intake([]()
+    {
+        while (true)
+        {
+            update_intake();
+            pros::delay(10);
+        }
+    });
 }
 
 /**
@@ -109,7 +119,7 @@ void opcontrol() {
 
         if (master.get_digital(INTAKE_BUTTON)) intake_state = (INTAKE);
         else if (master.get_digital(SCORE_HIGH_BUTTON)) intake_state = (SCORE_HIGH);
-        else if (master.get_digital(SCORE_MID_BUTTON)) intake_state = (SCORE_MID);
+        else if (master.get_digital(SCORE_MID_BUTTON)) intake_state = (SCORE_MID_SKILLS);
         else if (master.get_digital(SCORE_LOW_BUTTON)) intake_state = (SCORE_LOW);
         else {
             intake_run_time = 0;

@@ -18,7 +18,7 @@ enum IntakeState {
 	SCORE_HIGH = 3,
 	IDLE = 4,
 	SCORE_MID_SKILLS_FAST = 6,
-	SCORE_MID_SKILLS_SLOW = 5,
+	SCORE_MID_SKILLS = 5,
 	SCORE_MID_SKILLS_MEDIUM = 7,
 	CUSTOM_MID = 8,
 };
@@ -41,6 +41,8 @@ struct JamState {
 
 	void update();
 };
+
+void update_intake();
 
 extern JamState intake_jam_state;
 

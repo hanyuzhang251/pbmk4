@@ -43,7 +43,7 @@ void JamState::update() {
     }
 }
 
-JamState intake_jam_state(nullptr, 50, 50);
+JamState intake_jam_state(nullptr, 50, 120);
 
 void intake_init() {
     // Initialize intake motor
@@ -146,10 +146,10 @@ void update_intake() {
         intake_vel = (420);
         break;
     }
-    case SCORE_MID_SKILLS_SLOW: {
+    case SCORE_MID_SKILLS: {
         set_score_mid(true);
         set_pto(true);
-        intake_vel = (270);
+        intake_vel = (300);
         break;
     }
     case CUSTOM_MID: {
@@ -194,8 +194,6 @@ void intake_set_state(IntakeState state) {
     if (state != current_state) last_intake_command_time = pros::millis();
 
     current_state = state;
-
-    update_intake();
 }
 
 float power_mult = 1;
@@ -330,7 +328,7 @@ void score_7_mid() {
 
     intake_set_state(SCORE_MID_SKILLS_FAST);
     pros::delay(300);
-    intake_set_state(SCORE_MID_SKILLS_SLOW);
+    intake_set_state(SCORE_MID_SKILLS);
     pros::delay(2200);
 
     chassis.setBrakeMode(MOTOR_BRAKE_COAST);

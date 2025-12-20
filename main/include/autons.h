@@ -15,6 +15,8 @@
 
 void skills();
 
+void mid_goal(bool auton = true);
+
 inline void awp_12() {
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
     chassis.setPose(-49.5, -18, 180);

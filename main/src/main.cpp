@@ -90,7 +90,7 @@ void opcontrol() {
     while (true) {
 
         if (master.get_digital_new_press(DIGITAL_X)) {
-            score_7_mid();
+            mid_goal(false);
         }
         
         bool raise_wing = true;

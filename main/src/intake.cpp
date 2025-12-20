@@ -149,7 +149,7 @@ void update_intake() {
     case SCORE_MID_SKILLS: {
         set_score_mid(true);
         set_pto(true);
-        intake_vel = (300);
+        intake_vel = (280);
         break;
     }
     case CUSTOM_MID: {
@@ -278,7 +278,7 @@ void drive_until_distance(float heading_hold, const int power, const int dist, c
 
         float mult = std::min((std::abs(diff_in) > ramp_down ? 1 : std::abs(diff_in) / ramp_down) + 0.25f, 1.0f);
 
-        float out = std::pow(std::abs(diff_in), 1.8);
+        float out = std::pow(std::abs(diff_in), 2);
         if (out < MIN_OUT) out = MIN_OUT;
         if (out > MAX_OUT) out = MAX_OUT;
 

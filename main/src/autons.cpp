@@ -14,8 +14,8 @@ constexpr uint32_t MATCHLOAD_DURATION = 1800;
 
 constexpr float LONG_GOAL_ENTER_SPEED_MIN = 110;
 constexpr float LONG_GOAL_ENTER_SPEED_MAX = 70;
-constexpr uint32_t LONG_GOAL_DURATION = 2650;
-constexpr uint32_t LONG_GOAL_RAM_DURATION = 550;
+constexpr uint32_t LONG_GOAL_DURATION = 3100;
+constexpr uint32_t LONG_GOAL_RAM_DURATION = 500;
 
 constexpr float LONG_GOAL_CROSS_MIN_SPEED = 80;
 constexpr int LONG_GOAL_DIST_ALIGN = 435;
@@ -75,17 +75,17 @@ void long_goals(const bool first)
     chassis.setPose(pn* (WALL_COORD - side_distance), c_pose().y, c_pose().theta);
 
     // move to long goal
-    drive_until_distance(0, 119, 465, 1, 0, 850);
+    drive_until_distance(0, 119, 470, 1, 0, 850);
     chassis.turnToHeading(aj(90, -90), 600, {}, false);
     // move straight backward, actually more consistent here
     chassis.arcade(-LONG_GOAL_ENTER_SPEED_MAX, 0);
-    pros::delay(300);
+    pros::delay(450);
     // scoring
     intake_set_state(SCORE_HIGH);
     chassis.arcade(-LONG_GOAL_ENTER_SPEED_MIN, 0);
     pros::delay(LONG_GOAL_RAM_DURATION);
     chassis.arcade(0, 0);
-    pros::delay(LONG_GOAL_DURATION - LONG_GOAL_RAM_DURATION +aj(500, 600));
+    pros::delay(LONG_GOAL_DURATION - LONG_GOAL_RAM_DURATION +aj(0, 100));
 
     // reset pose at long goal
     match_load_reset(100, 0, aj(1, 3));
@@ -101,13 +101,13 @@ void long_goals(const bool first)
     match_load_reset(MATCHLOAD_DURATION, 0, aj(1, 3));
 
     // move to long goal
-    chassis.moveToPoint(pn* 26, pn* (47 +aj(0.5f, 1.5f)), 1000, {.forwards = false, .maxSpeed = LONG_GOAL_ENTER_SPEED_MAX,}, false);
+    chassis.moveToPoint(pn* 26, pn* (47 +aj(0.5f, 0.5f)), 1000, {.forwards = false, .maxSpeed = LONG_GOAL_ENTER_SPEED_MAX,}, false);
     // scoring
     intake_set_state(SCORE_HIGH);
     chassis.arcade(-LONG_GOAL_ENTER_SPEED_MIN, 0);
     pros::delay(LONG_GOAL_RAM_DURATION);
     chassis.arcade(0, 0);
-    pros::delay(LONG_GOAL_DURATION - LONG_GOAL_RAM_DURATION +aj(0, 700));
+    pros::delay(LONG_GOAL_DURATION - LONG_GOAL_RAM_DURATION +aj(100, 200));
 
     // reset pose at long goal
     chassis.setPose(c_pose().x, c_pose().y, conditional_heading_reset(chr_params));
@@ -190,7 +190,7 @@ void mid_goal(const bool auton)
 
 void skills()
 {
-    // for coordinates and heading, they are in the format of `[target] +[adjustment] +[tuning]`
+    // for coordinates and heading, they are in the format of `[target] +[adjustment]/[tuning]`
     // target is the point of interest, adjustment is the number added during routing, and tuning is to adjust when tuning.
 
     chassis.setPose(-47, 14.5, 90);

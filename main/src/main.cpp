@@ -70,7 +70,7 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-    skills();
+    awp_14();
 }
 
 /**
@@ -89,9 +89,9 @@ void autonomous() {
 void opcontrol() {
     while (true) {
 
-        if (master.get_digital_new_press(DIGITAL_X)) {
-            mid_goal(false);
-        }
+        // if (master.get_digital_new_press(DIGITAL_X)) {
+        //     mid_goal(false);
+        // }
         
         bool raise_wing = true;
         for (const pros::controller_digital_e_t button : WING_ON_BUTTON_COMBINATION) {

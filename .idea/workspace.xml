@@ -30,7 +30,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="443233f4-bb5a-44f7-a126-27a73f05f47c" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/include/autons.h" beforeDir="false" afterPath="$PROJECT_DIR$/main/include/autons.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/src/autons.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/src/autons.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/src/main.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -95,11 +98,6 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="pros_indexer" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="v5_pros_indexer" TARGET_NAME="pros_indexer" CONFIG_NAME="Debug">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -120,6 +118,7 @@
       <workItem from="1766012149251" duration="11578000" />
       <workItem from="1766081788290" duration="615000" />
       <workItem from="1766103043665" duration="8412000" />
+      <workItem from="1766286328643" duration="5559000" />
     </task>
     <servers />
   </component>

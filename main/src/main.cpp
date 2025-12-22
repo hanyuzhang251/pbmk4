@@ -70,7 +70,7 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-    tbd_auto();
+    auto_3p6(true);
 }
 
 /**

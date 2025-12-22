@@ -259,7 +259,7 @@ namespace auton_skills_namespace
 
 constexpr int MATCHLOAD_DISTANCE = 195;
 
-constexpr uint32_t MATCHLOAD_3_TIME = 700;
+constexpr uint32_t MATCHLOAD_3_TIME = 550;
 
 uint32_t long_score_time(const int blocks)
 {
@@ -350,8 +350,10 @@ void awp_14()
     chassis.arcade(0, 0);
 }
 
-void tbd_auto()
+void auto_3p6(const bool strong)
 {
+    const uint32_t end = pros::millis() + 15000;
+
     // for coordinates and heading, they are in the format of `[target] +[adjustment]/[tuning]`
     // target is the point of interest, adjustment is the number added during routing, and tuning is to adjust when tuning.
 
@@ -359,8 +361,14 @@ void tbd_auto()
 
     // collect blocks
     intake_set_state(INTAKE);
-    chassis.moveToPoint(-23.5, 23.5, 1000, {.minSpeed = 40, .earlyExitRange = 2}, false);
-    chassis.moveToPose(-7, 36.5 + 5, 0, 1300, {.horizontalDrift = 2, .minSpeed = 30, .earlyExitRange = 5}, false);
+    chassis.moveToPoint(-23.5 +1, 23.5+4, 1000, {.minSpeed = 40, .earlyExitRange = 2}, true);
+    pros::delay(400);
+    set_matchloader(true);
+    chassis.waitUntilDone();
+    chassis.moveToPoint(-7 -10.5f, 36.5 +5 +4, 1300, {.minSpeed = 30, .earlyExitRange = 5}, true);
+    pros::delay(160);
+    set_matchloader(false);
+    chassis.waitUntilDone();
     set_matchloader(true);
     chassis.arcade(30, 0);
     pros::delay(200);
@@ -368,19 +376,20 @@ void tbd_auto()
     // move to long goal
 
     // current pose, target point, adjust for exit, tuning value, in that order
-    chassis.moveToPoint(c_pose().x -15 -3 -4, c_pose().y +6 +1 +0, 1000, {.forwards = false, .minSpeed = 30, .earlyExitRange = 4}, false);
+    chassis.moveToPoint(c_pose().x -14 -3, c_pose().y +13 +1, 1000, {.forwards = false, .minSpeed = 30, .earlyExitRange = 4}, false);
 
     // align
     chassis.arcade(-127, 127);
-    pros::delay(500);
+    intake_set_state(SCORE_LOW);
+    pros::delay(350);
     intake_set_state(SCORE_HIGH); // start scoring early
     chassis.arcade(-127, -127);
-    pros::delay(150);
+    pros::delay(200);
     chassis.arcade(-127, 0);
     pros::delay(350);
     chassis.arcade(0, 0);
 
-    pros::delay(long_score_time(5) - 1000);
+    pros::delay(long_score_time(5) - 900);
     chassis.arcade(-127, 0);
     pros::delay(300);
     chassis.arcade(0, 0);
@@ -389,14 +398,19 @@ void tbd_auto()
 
     // enter matchloader 1
     intake_set_state(INTAKE);
-    chassis.moveToPoint( -61,  46, 800, {.maxSpeed = auton_skills_namespace::MATCHLOAD_ENTER_SPEED_MAX,}, false);
+    chassis.moveToPoint( -61,  46, 350, {.minSpeed = auton_skills_namespace::MATCHLOAD_ENTER_SPEED_MIN,}, false);
+    chassis.moveToPoint( -61,  46, 450, {.maxSpeed = auton_skills_namespace::MATCHLOAD_ENTER_SPEED_MAX,}, false);
     // finish matchloading
     chassis.arcade(auton_skills_namespace::MATCHLOAD_ENTER_SPEED_MIN, 0);
     match_load_reset(   (MATCHLOAD_3_TIME), 0, 2);
 
-    chassis.moveToPoint(-43, 47, 800, {.forwards = false}, false);
+    chassis.moveToPoint(-47, 47, 800, {.forwards = false}, false);
     chassis.turnToHeading(-45, 600, {.minSpeed = 3, .earlyExitRange = 2}, false);
-    chassis.moveToPoint(-14 +5, 14 -5 + 1, 1500, {.forwards = false, .minSpeed = 30, .earlyExitRange = 2}, false);
+    chassis.moveToPoint(-14 +3, 14 -3 -0.5f, 1500, {.forwards = false, .minSpeed = 30, .earlyExitRange = 2}, true);
+    intake_set_state(SCORE_LOW);
+    pros::delay(500);
+    intake_set_state(IDLE);
+    chassis.waitUntilDone();
     intake_set_state(SCORE_MID);
     chassis.arcade(-30, 0);
     pros::delay(500);
@@ -404,39 +418,23 @@ void tbd_auto()
     chassis.arcade(20, 0);
     pros::delay(300);
     chassis.arcade(0, 0);
-    pros::delay(700);
+    pros::delay(400);
 
-    chassis.moveToPoint(-40, 43.5, 1000, {}, false);
+    chassis.moveToPoint(-40, 41, 1000, {}, false);
     chassis.turnToHeading(-90, 600, {.minSpeed = 3, .earlyExitRange = 2}, false);
-    chassis.arcade(-127, 0);
-    pros::delay(600);
-    chassis.arcade(0, 127);
-    pros::delay(150);
+    if (strong)
+    {
+        chassis.arcade(-127, 0);
+        pros::delay(500);
+        chassis.arcade(-80, 127);
+        pros::delay(end - pros::millis() - 20);
+    } else
+    {
+        chassis.arcade(-80, 0);
+        pros::delay(900);
+        chassis.arcade(-80, 127);
+        pros::delay(end - pros::millis() - 20);
+    }
     chassis.arcade(0, 0);
-
-
-
-    return;
-    // move to long goal
-    chassis.moveToPoint( 26,  (47 +0.6f), 1000,
-                        {.forwards = false, .maxSpeed = auton_skills_namespace::LONG_GOAL_ENTER_SPEED_MAX,}, false);
-    // scoring
-    intake_set_state(SCORE_HIGH);
-    chassis.arcade(-auton_skills_namespace::LONG_GOAL_ENTER_SPEED_MIN, 0);
-    pros::delay(auton_skills_namespace::LONG_GOAL_RAM_DURATION);
-    chassis.arcade(0, 0);
-    pros::delay(auton_skills_namespace::LONG_GOAL_DURATION - auton_skills_namespace::LONG_GOAL_RAM_DURATION - 700);
-
-    // reset pose at long goal
-    chassis.setPose(c_pose().x, c_pose().y, conditional_heading_reset(c_pose().theta, -90, 5, 0.7f));
-    match_load_reset(100, 0, 2);
-
-    set_matchloader(false);
-
-    chassis.swingToHeading(180, DriveSide::LEFT, 600, {}, false);
-    chassis.arcade(65, 0);
-    pros::delay(650);
-    chassis.swingToHeading(-90, DriveSide::LEFT, 600, {}, false);
-    chassis.moveToPoint(-11, 37, 1000, {.forwards = false}, false);
-
+    chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
 }

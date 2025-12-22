@@ -485,6 +485,6 @@ inline void NewQualRight() {
     return;
 }
 
-void tbd_auto();
+void auto_3p6(bool strong = false);
 
 #endif // _AUTONS_H_

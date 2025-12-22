@@ -485,4 +485,6 @@ inline void NewQualRight() {
     return;
 }
 
+void tbd_auto();
+
 #endif // _AUTONS_H_

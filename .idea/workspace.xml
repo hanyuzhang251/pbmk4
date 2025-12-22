@@ -50,6 +50,11 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="mock:///AIAssistantSnippet.." root0="SKIP_HIGHLIGHTING" />
   </component>
+  <component name="JsbtTreeLayoutManager">
+    <layout place="tools.popupGrunt">
+      <scroll-view-position x="0" y="0" />
+    </layout>
+  </component>
   <component name="MacroExpansionManager">
     <option name="directoryName" value="3V1Sx3qh" />
   </component>
@@ -118,7 +123,8 @@
       <workItem from="1766012149251" duration="11578000" />
       <workItem from="1766081788290" duration="615000" />
       <workItem from="1766103043665" duration="8412000" />
-      <workItem from="1766286328643" duration="5559000" />
+      <workItem from="1766286328643" duration="6206000" />
+      <workItem from="1766358766352" duration="7353000" />
     </task>
     <servers />
   </component>

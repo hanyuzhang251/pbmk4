@@ -70,7 +70,7 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-    awp_14();
+    tbd_auto();
 }
 
 /**

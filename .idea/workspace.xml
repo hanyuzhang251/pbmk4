@@ -31,6 +31,7 @@
   <component name="ChangeListManager">
     <list default="true" id="443233f4-bb5a-44f7-a126-27a73f05f47c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/include/autons.h" beforeDir="false" afterPath="$PROJECT_DIR$/main/include/autons.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/src/autons.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/src/autons.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/src/main.cpp" afterDir="false" />
     </list>
@@ -125,7 +126,7 @@
       <workItem from="1766286328643" duration="6206000" />
       <workItem from="1766358766352" duration="9220000" />
       <workItem from="1766429508532" duration="4000" />
-      <workItem from="1766437927165" duration="19193000" />
+      <workItem from="1766437927165" duration="21006000" />
     </task>
     <servers />
   </component>

@@ -262,6 +262,7 @@ namespace auton_skills_namespace
 constexpr int MATCHLOAD_DISTANCE = 195;
 
 constexpr uint32_t MATCHLOAD_3_TIME = 550;
+constexpr uint32_t MATCHLOAD_6_TIME = 1100;
 
 uint32_t long_score_time(const int blocks)
 {
@@ -379,7 +380,7 @@ void stack_undergoal(const bool left)
     pros::delay(400);
     set_matchloader(true);
     chassis.waitUntilDone();
-    chassis.moveToPoint(-7 +aj(-10.5f, -5), lr*(36.5 +5 +4), 1300, {.minSpeed = 30, .earlyExitRange = 5}, true);
+    chassis.moveToPoint(-7 +aj(-9, -6), lr*(36.5 +5 +4), 1300, {.minSpeed = 30, .earlyExitRange = 5}, true);
     pros::delay(160);
     set_matchloader(false);
     chassis.waitUntilDone();
@@ -471,21 +472,46 @@ void auto_3p6(const bool strong)
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
 }
 
-void auto_6(const bool left, const bool strong)
+void auto_6(const bool left, const bool strong, const bool matchload)
 {
     const uint32_t end = pros::millis() + 15000;
 
     if (!left) set_wing(true);
 
     stack_undergoal(left);
+
+    if (!matchload)
+    {
+        set_matchloader(false);
+        intake_set_state(IDLE);
+    } else
+    {
+        // enter matchloader 1
+        intake_set_state(INTAKE);
+        chassis.moveToPoint( -61,  lr* 46, 350, {.minSpeed = auton_skills_namespace::MATCHLOAD_ENTER_SPEED_MIN,}, false);
+        chassis.moveToPoint( -61,  lr* 46, 450, {.maxSpeed = auton_skills_namespace::MATCHLOAD_ENTER_SPEED_MAX,}, false);
+        // finish matchloading
+        chassis.arcade(auton_skills_namespace::MATCHLOAD_ENTER_SPEED_MIN, 0);
+        match_load_reset((MATCHLOAD_6_TIME), 0, aj(2,3));
+
+        // move to long goal
+        chassis.moveToPoint(-30, lr* 47, 700, {.forwards = false,}, true);
+        intake_set_state(SCORE_LOW);
+        pros::delay(300);
+        intake_set_state(SCORE_HIGH);
+        chassis.waitUntilDone();
+        chassis.arcade(-127, 0);
+        pros::delay(400);
+        chassis.arcade(0, 0);
+        pros::delay(long_score_time(3) -400-400+300);
+    }
+
     set_matchloader(false);
-
-    intake_set_state(IDLE);
-
     chassis.swingToHeading(180, DriveSide::LEFT, 600, {.minSpeed = 3, .earlyExitRange = 2}, false);
     chassis.arcade(30, 0);
     pros::delay(100);
     chassis.turnToHeading(-90, 600, {}, false);
     set_wing(false);
+        intake_set_state(IDLE);
     wing(strong, end, 250);
 }

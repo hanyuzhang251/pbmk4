@@ -487,4 +487,6 @@ inline void NewQualRight() {
 
 void auto_3p6(bool strong = false);
 
+void auto_6(bool left, bool strong = false);
+
 #endif // _AUTONS_H_

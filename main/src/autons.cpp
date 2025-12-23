@@ -266,6 +266,9 @@ uint32_t long_score_time(const int blocks)
     return static_cast<uint32_t>(1000.0 * (0.5 + std::pow(blocks, 1.7) / 8.0));
 }
 
+#define lr (left?1:-1)
+#define aj(a, b) (left?a:b)
+
 void awp_14()
 {
     constexpr uint32_t FINAL_STAGE_RESERVE = 4000;
@@ -350,22 +353,20 @@ void awp_14()
     chassis.arcade(0, 0);
 }
 
-void auto_3p6(const bool strong)
+void stack_undergoal(const bool left)
 {
-    const uint32_t end = pros::millis() + 15000;
-
     // for coordinates and heading, they are in the format of `[target] +[adjustment]/[tuning]`
     // target is the point of interest, adjustment is the number added during routing, and tuning is to adjust when tuning.
 
-    chassis.setPose(-47, 14.5, 90);
+    chassis.setPose(-47, lr* 14.5, 90);
 
     // collect blocks
     intake_set_state(INTAKE);
-    chassis.moveToPoint(-23.5 +1, 23.5+4, 1000, {.minSpeed = 40, .earlyExitRange = 2}, true);
+    chassis.moveToPoint(-23.5 +1, lr*(23.5+4), 1000, {.minSpeed = 40, .earlyExitRange = 2}, true);
     pros::delay(400);
     set_matchloader(true);
     chassis.waitUntilDone();
-    chassis.moveToPoint(-7 -10.5f, 36.5 +5 +4, 1300, {.minSpeed = 30, .earlyExitRange = 5}, true);
+    chassis.moveToPoint(-7 +aj(-10.5f, -5), lr*(36.5 +5 +4), 1300, {.minSpeed = 30, .earlyExitRange = 5}, true);
     pros::delay(160);
     set_matchloader(false);
     chassis.waitUntilDone();
@@ -376,14 +377,19 @@ void auto_3p6(const bool strong)
     // move to long goal
 
     // current pose, target point, adjust for exit, tuning value, in that order
-    chassis.moveToPoint(c_pose().x -14 -3, c_pose().y +13 +1, 1000, {.forwards = false, .minSpeed = 30, .earlyExitRange = 4}, false);
+    chassis.moveToPoint(c_pose().x -14 -3 , c_pose().y + lr*(+13 +1) +aj(0, 7.5), 1000, {.forwards = false, .minSpeed = 30, .earlyExitRange = 4}, false);
 
     // align
-    chassis.arcade(-127, 127);
+    chassis.arcade(-127, lr* 127);
     intake_set_state(SCORE_LOW);
     pros::delay(350);
+    if (!left)
+    {
+        intake_set_state(IDLE);
+        pros::delay(100);
+    }
     intake_set_state(SCORE_HIGH); // start scoring early
-    chassis.arcade(-127, -127);
+    chassis.arcade(-127, lr* -127);
     pros::delay(200);
     chassis.arcade(-127, 0);
     pros::delay(350);
@@ -394,7 +400,31 @@ void auto_3p6(const bool strong)
     pros::delay(300);
     chassis.arcade(0, 0);
     chassis.setPose(c_pose().x, c_pose().y, conditional_heading_reset(c_pose().theta, -90, 5, 0.7f));
-    match_load_reset(100, 0, 2);
+    match_load_reset(100, 0, aj(2, 3));
+}
+
+void wing(const bool strong, const uint32_t end, const uint32_t extra_time = 0)
+{
+    if (strong)
+    {
+        chassis.arcade(-90, 0);
+        pros::delay(500 + extra_time);
+        chassis.arcade(-80, 127);
+        pros::delay(end - pros::millis() - 20);
+    } else
+    {
+        chassis.arcade(-85, 0);
+        pros::delay(900 + extra_time);
+        chassis.arcade(-85, 127);
+        pros::delay(end - pros::millis() - 20);
+    }
+}
+
+void auto_3p6(const bool strong)
+{
+    const uint32_t end = pros::millis() + 15000;
+
+    stack_undergoal(true);
 
     // enter matchloader 1
     intake_set_state(INTAKE);
@@ -421,20 +451,28 @@ void auto_3p6(const bool strong)
     pros::delay(400);
 
     chassis.moveToPoint(-40, 41, 1000, {}, false);
+    intake_set_state(IDLE);
     chassis.turnToHeading(-90, 600, {.minSpeed = 3, .earlyExitRange = 2}, false);
-    if (strong)
-    {
-        chassis.arcade(-127, 0);
-        pros::delay(500);
-        chassis.arcade(-80, 127);
-        pros::delay(end - pros::millis() - 20);
-    } else
-    {
-        chassis.arcade(-80, 0);
-        pros::delay(900);
-        chassis.arcade(-80, 127);
-        pros::delay(end - pros::millis() - 20);
-    }
+    wing(strong, end);
     chassis.arcade(0, 0);
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
+}
+
+void auto_6(const bool left, const bool strong)
+{
+    const uint32_t end = pros::millis() + 15000;
+
+    if (!left) set_wing(true);
+
+    stack_undergoal(left);
+    set_matchloader(false);
+
+    intake_set_state(IDLE);
+
+    chassis.swingToHeading(180, DriveSide::LEFT, 600, {.minSpeed = 3, .earlyExitRange = 2}, false);
+    chassis.arcade(30, 0);
+    pros::delay(100);
+    chassis.turnToHeading(-90, 600, {}, false);
+    set_wing(false);
+    wing(strong, end, 250);
 }

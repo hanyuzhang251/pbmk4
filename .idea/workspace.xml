@@ -33,6 +33,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/include/autons.h" beforeDir="false" afterPath="$PROJECT_DIR$/main/include/autons.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/src/autons.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/src/autons.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main/src/intake.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/src/intake.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main/src/main.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -126,7 +127,9 @@
       <workItem from="1766286328643" duration="6206000" />
       <workItem from="1766358766352" duration="9220000" />
       <workItem from="1766429508532" duration="4000" />
-      <workItem from="1766437927165" duration="21006000" />
+      <workItem from="1766437927165" duration="25159000" />
+      <workItem from="1766536451784" duration="3476000" />
+      <workItem from="1766610316815" duration="1150000" />
     </task>
     <servers />
   </component>

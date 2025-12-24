@@ -20,7 +20,7 @@ namespace auton_skills_namespace
     void mid_goal(bool auton = true);
 }
 
-void awp_14();
+void sawp_14();
 
 inline void elims_right9() {
 

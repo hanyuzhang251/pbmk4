@@ -149,7 +149,7 @@ void update_intake() {
     case SCORE_MID_SKILLS: {
         set_score_mid(true);
         set_pto(true);
-        intake_vel = (280);
+        intake_vel = (294);
         break;
     }
     case CUSTOM_MID: {

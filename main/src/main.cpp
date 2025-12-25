@@ -70,7 +70,8 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-    sawp_14();
+
+   auton_skills_namespace::skills();
 }
 
 /**

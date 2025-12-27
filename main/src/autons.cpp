@@ -31,6 +31,8 @@ auto conditional_heading_reset(const float heading, const float predicted_headin
 
 namespace auton_skills_namespace
 {
+    constexpr bool CM = true;
+
     constexpr float MATCHLOAD_ENTER_SPEED_MAX = 58;
     constexpr float MATCHLOAD_ENTER_SPEED_MIN = 35;
     constexpr uint32_t MATCHLOAD_DURATION = 1800;
@@ -61,8 +63,9 @@ namespace auton_skills_namespace
         chassis.turnToHeading(aj(-90, 90), 600, {}, false);
         match_load_reset(100, 0, aj(2, 4));
         // enter matchloader 1
+        unjam_on = false;
         intake_set_state(INTAKE);
-        chassis.moveToPoint(pn * -61, pn * 46, aj(400, 440), {.maxSpeed = MATCHLOAD_ENTER_SPEED_MAX,}, false);
+        chassis.moveToPoint(pn * -61, pn * (CM?46.5f:47), aj(400, 550), {.maxSpeed = MATCHLOAD_ENTER_SPEED_MAX,}, false);
         // finish matchloading
         chassis.arcade(MATCHLOAD_ENTER_SPEED_MIN, 0);
         pros::delay(MATCHLOAD_DURATION + aj(250, 0));
@@ -73,8 +76,10 @@ namespace auton_skills_namespace
         chassis.moveToPoint(pn * -23, pn * 60, 1000, {
                                 .forwards = false, .minSpeed = LONG_GOAL_CROSS_MIN_SPEED, .earlyExitRange = 4
                             }, false);
+        chassis.moveToPoint(pn * 40, pn * 61, 1500, {.forwards = false}, true);
+        pros::delay(500);
         set_matchloader(false);
-        chassis.moveToPoint(pn * 40, pn * 61, 1500, {.forwards = false}, false);
+        chassis.waitUntilDone();
         // flush with wall
         chassis.turnToHeading(aj(0, 180), 650, {}, false);
         const float side_distance = static_cast<float>(find_dist(right_dist, right_dist_offset, 0, Dir::Right, 100));
@@ -84,6 +89,7 @@ namespace auton_skills_namespace
         drive_until_distance(0, 119, 470, 1, 0, 850);
         chassis.turnToHeading(aj(90, -90), 600, {}, false);
         // move straight backward, actually more consistent here
+        unjam_on = true;
         chassis.arcade(-LONG_GOAL_ENTER_SPEED_MIN, 0);
         set_matchloader(true);
         pros::delay(450);
@@ -96,12 +102,13 @@ namespace auton_skills_namespace
         chassis.arcade(0, 0);
 
         // reset pose at long goal
-        chassis.setPose(c_pose().x, c_pose().y, conditional_heading_reset(chr_params));
+        // chassis.setPose(c_pose().x, c_pose().y, conditional_heading_reset(chr_params));
         match_load_reset(100, 0, aj(1, 3));
 
         // enter matchloader 2
+        unjam_on = false;
         intake_set_state(INTAKE);
-        chassis.moveToPoint(pn * 61, pn * 46, 850, {.maxSpeed = MATCHLOAD_ENTER_SPEED_MAX,}, false);
+        chassis.moveToPoint(pn * 61, pn * (CM?46.5f:47) +aj(0, -1), 870, {.maxSpeed = MATCHLOAD_ENTER_SPEED_MAX,}, false);
         chassis.arcade(MATCHLOAD_ENTER_SPEED_MIN, 0);
         // finish matchloading while running reset
         match_load_reset(MATCHLOAD_DURATION, 0, aj(1, 3));
@@ -109,6 +116,7 @@ namespace auton_skills_namespace
         // move to long goal
         chassis.moveToPoint(pn * 30, pn * (47 + aj(0.5f, 0.5f)), 700,
                             {.forwards = false,}, true);
+        unjam_on = true;
         pros::delay(500);
         intake_set_state(SCORE_LOW);
         chassis.waitUntilDone();
@@ -143,12 +151,18 @@ namespace auton_skills_namespace
         if (!first) return;
 
         // enter park zone
+        unjam_on = true;
         intake_set_state(INTAKE);
         // cross
-        chassis.arcade(80, 0);
-        const uint32_t cross_time = aj(3000, 1300);
-        constexpr uint32_t drop_time = 2700;
+        chassis.arcade(84, 0);
+        const uint32_t cross_time = aj(2650, 2000);
+        constexpr uint32_t drop_time = 900;
         pros::delay(drop_time);
+        if (first)
+        {
+        unjam_on = false;
+            chassis.arcade(80, 0);
+        }
         // if (first) set_matchloader(true);
         pros::delay(std::max(cross_time - drop_time, 1UL));
 
@@ -158,6 +172,7 @@ namespace auton_skills_namespace
         chassis.arcade(-70, 0);
         pros::delay(900);
         chassis.arcade(0, 0);
+        unjam_on = true;
     }
 
     void mid_goal(const bool auton)
@@ -180,8 +195,6 @@ namespace auton_skills_namespace
 
         set_matchloader(false);
 
-        intake_set_state(INTAKE);
-
         intake_set_state(IDLE);
         // collect one from four stack
         chassis.turnToPoint(22.5 + 2, -20.5 - 6.5, 800, {}, false);
@@ -191,17 +204,17 @@ namespace auton_skills_namespace
 
         // move to mid goal
         chassis.turnToHeading(135, 600, {}, false);
-        chassis.moveToPoint(14 - 3 +2, -14 + 3, 900, {.forwards = false, .maxSpeed = 40, .earlyExitRange = 2}, false);
-        // score
-        intake_set_state(SCORE_MID_SKILLS);
+        chassis.moveToPoint(14 - 3 +2, -14 + 3, 250, {.forwards = false,}, false);
+        chassis.moveToPoint(14 - 3 +2, -14 + 3, 700, {.forwards = false, .maxSpeed = 45}, false);
+        intake_set_state(SCORE_MID_SKILLS_MEDIUM);
         // move forward slightly
-        chassis.arcade(20, 0);
-        pros::delay(400);
+        chassis.arcade(30, 0);
+        pros::delay(350);
         chassis.arcade(0, 0);
-        pros::delay(1700);
+        pros::delay(1900);
         // ram
-        chassis.arcade(-20, 0);
-        pros::delay(500);
+        chassis.arcade(-30, 0);
+        pros::delay(450);
 
         intake_set_state(IDLE);
     }
@@ -218,7 +231,7 @@ namespace auton_skills_namespace
         // 1. score matchload +1 in mid goal
 
         // collect 4 stack
-        chassis.moveToPoint(-23.5 + 5, 23.5 + 5.5, 1000, {}, true);
+        chassis.moveToPoint(-23.5 + 4.5, 23.5 + 5.5, 1000, {}, true);
         intake_set_state(INTAKE);
         pros::delay(700);
         intake_set_state(IDLE);
@@ -227,10 +240,10 @@ namespace auton_skills_namespace
 
         // position to mid goal
         chassis.swingToHeading(-45, DriveSide::RIGHT, 600, {}, false);
-        chassis.moveToPoint(-14 + 3 -0.5f, 14 - 3, 450, {.forwards = false}, false);
+        chassis.moveToPoint(-14 + 3, 14 - 3, 450, {.forwards = false}, false);
         // finish scoring
         intake_set_state(SCORE_MID_SKILLS);
-        pros::delay(550);
+        pros::delay(500);
         chassis.arcade(-35, 0);
         pros::delay(400);
 
@@ -264,11 +277,11 @@ namespace auton_skills_namespace
         intake_set_state(INTAKE);
 
         // cross
-        chassis.arcade(80, 0);
-        pros::delay(2000);
+        chassis.arcade(84, 0);
+        pros::delay(1650);
 
         chassis.arcade(-80, 0);
-        pros::delay(500);
+        pros::delay(600);
 
         chassis.arcade(0, 0);
     }
@@ -399,7 +412,7 @@ void stack_undergoal(const bool left)
     pros::delay(aj(400, 430));
     set_matchloader(true);
     chassis.waitUntilDone();
-    chassis.moveToPoint(-7 +aj(-11, -5), lr*(36.5 +5 +4), 1300, {.minSpeed = 30, .earlyExitRange = 5}, true);
+    chassis.moveToPoint(-7 +aj(-9, -7), lr*(36.5 +5 +4), 1300, {.minSpeed = 30, .earlyExitRange = 5}, true);
     pros::delay(160);
     set_matchloader(false);
     chassis.waitUntilDone();
@@ -447,7 +460,7 @@ void wing(const bool strong, const uint32_t end, const uint32_t extra_time = 0)
     } else
     {
         chassis.arcade(-85, 0);
-        pros::delay(900 + extra_time);
+        pros::delay(1000 + extra_time);
         chassis.arcade(-85, 127);
         pros::delay(end - pros::millis() - 20);
     }
@@ -461,31 +474,32 @@ void auto_3p6(const bool strong)
 
     // enter matchloader 1
     intake_set_state(INTAKE);
-    chassis.moveToPoint( -61,  46, 350, {.minSpeed = auton_skills_namespace::MATCHLOAD_ENTER_SPEED_MIN,}, false);
-    chassis.moveToPoint( -61,  46, 450, {.maxSpeed = auton_skills_namespace::MATCHLOAD_ENTER_SPEED_MAX,}, false);
+    chassis.moveToPoint( -61,  47, 400, {}, false);
+    chassis.moveToPoint( -61,  47, 500, {.maxSpeed = auton_skills_namespace::MATCHLOAD_ENTER_SPEED_MIN,}, false);
     // finish matchloading
     chassis.arcade(auton_skills_namespace::MATCHLOAD_ENTER_SPEED_MIN, 0);
-    match_load_reset(   (MATCHLOAD_3_TIME) - 100, 0, 2);
+    // finish matchloading
+    match_load_reset(   (MATCHLOAD_3_TIME), 0, 2);
 
     chassis.moveToPoint(-47.5f, 47, 800, {.forwards = false}, false);
     chassis.turnToHeading(-45, 600, {.minSpeed = 3, .earlyExitRange = 2}, false);
-    chassis.moveToPoint(-14 +3, 14 -3 -0.5f, 1500, {.forwards = false, .minSpeed = 30, .earlyExitRange = 2}, true);
+    chassis.moveToPoint(-14 +3 -0.5f, 14 -3 -1, 1200, {.forwards = false, .minSpeed = 30, .earlyExitRange = 2}, true);
     intake_set_state(SCORE_LOW);
-    pros::delay(500);
+    pros::delay(450);
     intake_set_state(IDLE);
     chassis.waitUntilDone();
-    intake_set_state(SCORE_MID);
+    intake_set_state(SCORE_MID_SKILLS);
     chassis.arcade(-30, 0);
-    pros::delay(500);
+    pros::delay(650);
     chassis.setPose(-14, 14, c_pose().theta);
     chassis.arcade(20, 0);
     pros::delay(300);
     chassis.arcade(0, 0);
-    pros::delay(400);
+    pros::delay(500);
 
-    chassis.moveToPoint(-40, 40.35f, 1000, {}, false);
+    chassis.moveToPoint(-40, 39.4f, 1000, {}, false);
     intake_set_state(IDLE);
-    chassis.turnToHeading(-90, 600, {.minSpeed = 3, .earlyExitRange = 2}, false);
+    chassis.turnToHeading(-95, 600, {.minSpeed = 3, .earlyExitRange = 2}, false);
     wing(strong, end, 200);
     chassis.arcade(0, 0);
     chassis.setBrakeMode(pros::E_MOTOR_BRAKE_COAST);
@@ -516,11 +530,11 @@ void auto_6(const bool left, const bool strong, const bool matchload)
         // move to long goal
         chassis.moveToPoint(-30, lr* 47, 700, {.forwards = false,}, true);
         intake_set_state(SCORE_LOW);
-        pros::delay(300);
+        pros::delay(330);
         intake_set_state(SCORE_HIGH);
         chassis.waitUntilDone();
         chassis.arcade(-127, 0);
-        pros::delay(400);
+        pros::delay(450);
         chassis.arcade(0, 0);
         pros::delay(long_score_time(3) -400-400+300);
     }

@@ -62,6 +62,8 @@ extern bool park_value;
 extern bool wing_value;
 extern bool descore_value;
 extern bool clamp_value;
+extern bool unjam_on;
+
 
 void set_matchloader(bool value);
 void set_pto(bool value);

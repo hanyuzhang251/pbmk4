@@ -70,8 +70,7 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-
-   auton_skills_namespace::skills();
+    auto_6(false, false, true);
 }
 
 /**
@@ -120,7 +119,7 @@ void opcontrol() {
 
         if (master.get_digital(INTAKE_BUTTON)) intake_state = (INTAKE);
         else if (master.get_digital(SCORE_HIGH_BUTTON)) intake_state = (SCORE_HIGH);
-        else if (master.get_digital(SCORE_MID_BUTTON)) intake_state = (SCORE_MID_SKILLS);
+        else if (master.get_digital(SCORE_MID_BUTTON)) intake_state = (SCORE_MID_SKILLS_MEDIUM);
         else if (master.get_digital(SCORE_LOW_BUTTON)) intake_state = (SCORE_LOW);
         else {
             intake_run_time = 0;

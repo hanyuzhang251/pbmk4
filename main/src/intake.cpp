@@ -26,13 +26,15 @@ bool wing_value = false;
 bool descore_value = false;
 bool clamp_value = false;
 
+bool unjam_on = true;
+
 JamState::JamState(pros::Motor* target, const uint32_t jam_tolerance, const uint32_t unjam_duration)
     : target(target), jam_tolerance(jam_tolerance), unjam_duration(unjam_duration) {
     jam_start = pros::millis();
 }
 
 void JamState::update() {
-    if (target->get_target_velocity() == 0 || target->get_actual_velocity() != 0) {
+    if (target->get_target_velocity() == 0 || target->get_actual_velocity() != 0 || !unjam_on) {
         jam_start = pros::millis();
     }
 
@@ -43,7 +45,7 @@ void JamState::update() {
     }
 }
 
-JamState intake_jam_state(nullptr, 50, 120);
+JamState intake_jam_state(nullptr, 50, 160);
 
 void intake_init() {
     // Initialize intake motor

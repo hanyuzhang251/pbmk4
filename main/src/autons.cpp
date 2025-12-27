@@ -65,7 +65,7 @@ namespace auton_skills_namespace
         // enter matchloader 1
         unjam_on = false;
         intake_set_state(INTAKE);
-        chassis.moveToPoint(pn * -61, pn * (CM?46.5f:47), aj(400, 550), {.maxSpeed = MATCHLOAD_ENTER_SPEED_MAX,}, false);
+        chassis.moveToPoint(pn * -61, pn * (CM?46.5f:47), aj(400, 470), {.maxSpeed = MATCHLOAD_ENTER_SPEED_MAX,}, false);
         // finish matchloading
         chassis.arcade(MATCHLOAD_ENTER_SPEED_MIN, 0);
         pros::delay(MATCHLOAD_DURATION + aj(250, 0));
@@ -197,16 +197,16 @@ namespace auton_skills_namespace
 
         intake_set_state(IDLE);
         // collect one from four stack
-        chassis.turnToPoint(22.5 + 2, -20.5 - 6.5, 800, {}, false);
-        chassis.moveToPoint(22.5 + 2, -20.5 - 6.5, 400, {}, true);
-        chassis.moveToPoint(22.5 + 2, -20.5 - 6.5, 1000, {.maxSpeed = 80}, true);
+        chassis.turnToPoint(22.5 + 2 +0.3f, -20.5 - 6.5, 800, {}, false);
+        chassis.moveToPoint(22.5 + 2 +0.3f, -20.5 - 6.5, 400, {}, true);
+        chassis.moveToPoint(22.5 + 2 +0.3f, -20.5 - 6.5, 1000, {.maxSpeed = 80}, true);
         chassis.waitUntilDone();
 
         // move to mid goal
         chassis.turnToHeading(135, 600, {}, false);
-        chassis.moveToPoint(14 - 3 +2, -14 + 3, 250, {.forwards = false,}, false);
-        chassis.moveToPoint(14 - 3 +2, -14 + 3, 700, {.forwards = false, .maxSpeed = 45}, false);
-        intake_set_state(SCORE_MID_SKILLS_MEDIUM);
+        chassis.moveToPoint(14 - 3 +2 +0.3f, -14 + 3, 250, {.forwards = false,}, false);
+        chassis.moveToPoint(14 - 3 +2 +0.3f, -14 + 3, 700, {.forwards = false, .maxSpeed = 45}, false);
+        intake_set_state(SCORE_MID_SKILLS);
         // move forward slightly
         chassis.arcade(30, 0);
         pros::delay(350);
@@ -278,7 +278,7 @@ namespace auton_skills_namespace
 
         // cross
         chassis.arcade(84, 0);
-        pros::delay(1650);
+        pros::delay(1850);
 
         chassis.arcade(-80, 0);
         pros::delay(600);

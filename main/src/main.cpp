@@ -70,7 +70,7 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-    auton_skills_namespace::skills();
+    auto_3p6(true);
 }
 
 /**
